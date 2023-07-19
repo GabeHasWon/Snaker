@@ -1,4 +1,5 @@
-﻿using Snaker.Content.Blocks;
+﻿using Snaker.Common.EventSystem;
+using Snaker.Content.Blocks;
 using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
@@ -42,4 +43,7 @@ internal class SnakerSubworld : Subworld
             }
         }
     }
+
+    public override void OnEnter() => ModContent.GetInstance<EventManagerSystem>().StartEvent();
+    public override void OnExit() => ModContent.GetInstance<EventManagerSystem>().EndEvent();
 }

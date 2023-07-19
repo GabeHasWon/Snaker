@@ -87,13 +87,13 @@ public class BurningPotatoProjectile : ModProjectile
 			for (int i = 0; i < 8; ++i)
 			{
 				Vector2 velocity = new Vector2(Main.rand.NextFloat(2, 4), 0).RotatedByRandom(MathHelper.TwoPi);
-				Gore.NewGore(Projectile.GetSource_DropAsItem(), Projectile.Center - Projectile.Size / 2f, velocity, GoreID.Smoke1 + Main.rand.Next(3));
+				Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center - Projectile.Size / 2f, velocity, GoreID.Smoke1 + Main.rand.Next(3));
 			}
 
 			for (int i = 0; i < 4; ++i)
 			{
 				Vector2 velocity = new Vector2(Main.rand.NextFloat(3, 6f), 0).RotatedByRandom(MathHelper.TwoPi);
-				Gore.NewGore(Projectile.GetSource_DropAsItem(), Projectile.Center - Projectile.Size / 2f, velocity, GoreID.Smoke1 + Main.rand.Next(3));
+				Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center - Projectile.Size / 2f, velocity, GoreID.Smoke1 + Main.rand.Next(3));
 			}
 
 			Projectile.position = Projectile.Center;
