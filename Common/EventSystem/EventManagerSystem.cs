@@ -75,7 +75,7 @@ internal class EventManagerSystem : ModSystem
 
     public void ProgressEvent(float weight)
     {
-        _waveProgress += weight;prog
+        _waveProgress += weight;
 
         if (_waveProgress > 1)
         {
