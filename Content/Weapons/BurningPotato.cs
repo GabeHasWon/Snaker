@@ -51,7 +51,13 @@ public class BurningPotatoProjectile : ModProjectile
 		AIType = 0;
     }
 
-	public override bool OnTileCollide(Vector2 oldVelocity)
+    public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
+    {
+		fallThrough = false;
+		return true;
+    }
+
+    public override bool OnTileCollide(Vector2 oldVelocity)
 	{
 		if (Math.Abs(Projectile.velocity.X - oldVelocity.X) > float.Epsilon)
 			Projectile.velocity.X = -oldVelocity.X * 0.8f;
@@ -87,13 +93,13 @@ public class BurningPotatoProjectile : ModProjectile
 			for (int i = 0; i < 8; ++i)
 			{
 				Vector2 velocity = new Vector2(Main.rand.NextFloat(2, 4), 0).RotatedByRandom(MathHelper.TwoPi);
-				Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center - Projectile.Size / 2f, velocity, GoreID.Smoke1 + Main.rand.Next(3));
+				Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, velocity, GoreID.Smoke1 + Main.rand.Next(3));
 			}
 
 			for (int i = 0; i < 4; ++i)
 			{
 				Vector2 velocity = new Vector2(Main.rand.NextFloat(3, 6f), 0).RotatedByRandom(MathHelper.TwoPi);
-				Gore.NewGore(Projectile.GetSource_Death(), Projectile.Center - Projectile.Size / 2f, velocity, GoreID.Smoke1 + Main.rand.Next(3));
+				Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, velocity, GoreID.Smoke1 + Main.rand.Next(3));
 			}
 
 			Projectile.position = Projectile.Center;

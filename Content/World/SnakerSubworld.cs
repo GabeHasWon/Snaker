@@ -14,7 +14,7 @@ namespace Snaker.Content.World;
 internal class SnakerSubworld : Subworld
 {
     public override int Width => 240;
-    public override int Height => 280;
+    public override int Height => 340;
 
     public override List<GenPass> Tasks => new()
     {
@@ -30,15 +30,25 @@ internal class SnakerSubworld : Subworld
         {
             for (int j = 0; j < Height; ++j)
             {
-                if (i < 50 || i > Width - 50 || j < 50 || j > Height - 50)
+                if (i < 50 || i > Width - 50 || j < 110 || j > Height - 50)
+                {
                     WorldGen.PlaceTile(i, j, ModContent.TileType<SnakeBrickTile>(), true);
+
+                    if (j == Height - 49 && WorldGen.genRand.NextBool(18))
+                        WorldGen.PlaceObject(i - 1, j - 2, ModContent.TileType<SnakeDecor>(), true, WorldGen.genRand.Next(5));
+                }
                 else
                 {
                     if (!WorldGen.genRand.NextBool(5) && i % 15 <= 2)
                         WorldGen.PlaceWall(i, j, WallID.ObsidianBrickUnsafe);
 
                     if (j > 60 && j % 30 == 0)
+                    {
                         WorldGen.PlaceTile(i, j, TileID.Platforms, true, false, -1, 13);
+
+                        if (WorldGen.genRand.NextBool(18))
+                            WorldGen.PlaceObject(i - 1, j - 2, ModContent.TileType<SnakeDecor>(), true, WorldGen.genRand.Next(5));
+                    }
                 }
             }
         }

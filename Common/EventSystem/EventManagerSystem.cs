@@ -41,7 +41,13 @@ internal class EventManagerSystem : ModSystem
         AnnounceWave();
     }
 
-    public void EndEvent() => _active = false;
+    public void EndEvent(bool announce = false)
+    {
+        _active = false;
+
+        if (announce)
+            ChatHelper.BroadcastChatMessage(Terraria.Localization.NetworkText.FromLiteral("The furious aura mists away..."), Color.White);
+    }
 
     private void SetSpawnChoices()
     {
@@ -87,7 +93,7 @@ internal class EventManagerSystem : ModSystem
             if (_wave <= EventStage.Boss)
                 AnnounceWave();
             else
-                EndEvent();
+                EndEvent(true);
         }
     }
 

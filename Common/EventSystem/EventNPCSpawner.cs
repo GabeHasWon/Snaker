@@ -38,6 +38,7 @@ internal class EventNPCSpawner : ModNPC
         NPC.immortal = true;
         NPC.dontTakeDamage = true;
         NPC.rarity = 0;
+        NPC.damage = 0;
     }
 
     public override void OnSpawn(IEntitySource source) => Timer = MaxTimer;

@@ -27,7 +27,7 @@ internal class InstancedEventNPC : GlobalNPC
             float eventWeight = npc.type switch
             {
                 NPCID.Lavabat => 0.0025f,
-                NPCID.RedDevil => 0.04f,
+                NPCID.RedDevil => 0.01f,
                 NPCID.Demon => 0.005f,
                 NPCID.FireImp => 0.003f,
                 _ => 0.05f
