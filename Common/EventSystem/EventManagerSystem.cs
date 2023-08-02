@@ -7,6 +7,8 @@ using Terraria.ModLoader;
 using Terraria.Utilities;
 using Terraria.DataStructures;
 using Terraria.Chat;
+using Snaker.Content.Enemies;
+using Snaker.Content;
 
 namespace Snaker.Common.EventSystem;
 
@@ -95,6 +97,27 @@ internal class EventManagerSystem : ModSystem
             else
                 EndEvent(true);
         }
+
+        if (_wave == EventStage.Boss)
+        {
+            for (int i = 0; i < Main.maxNPCs; ++i) //Despawn every add before boss
+            {
+                NPC npc = Main.npc[i];
+
+                if (npc.active && npc.GetGlobalNPC<InstancedEventNPC>().eventEnemy)
+                {
+                    npc.active = false;
+
+                    ExplosionHelper.Fire(npc.position - npc.Size / 2f, 40, Main.rand.NextFloat(1.5f, 2.5f), (7f, 12f));
+                    ExplosionHelper.Smoke(npc.GetSource_Death(), npc.position, 8, (2f, 4f));
+                }
+            }
+
+            int x = SubworldSystem.Current.Width * 16 + (14 * 40);
+            int y = SubworldSystem.Current.Height * 10;
+            int spawn = NPC.NewNPC(new EntitySource_SpawnNPC("Event"), x, y, ModContent.NPCType<DevilishSnake>());
+            Main.npc[spawn].GetGlobalNPC<InstancedEventNPC>().eventEnemy = true;
+        }
     }
 
     private void AnnounceWave()
@@ -114,6 +137,19 @@ internal class EventManagerSystem : ModSystem
     public override void PreUpdateNPCs()
     {
         int count = 0;
+
+        if (_wave == EventStage.Boss) //Set progress to boss's health
+        {
+            int whoAmI = NPC.FindFirstNPC(ModContent.NPCType<DevilishSnake>());
+
+            if (whoAmI != -1) 
+            {
+                NPC npc = Main.npc[whoAmI];
+
+                if (npc.active && npc.life > 0)
+                    _waveProgress = 1 - (npc.life / (float)npc.lifeMax);
+            }
+        }
 
         for (int i = 0; i < Main.maxNPCs; ++i)
         {

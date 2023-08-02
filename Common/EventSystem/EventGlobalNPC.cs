@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Snaker.Content.Enemies;
+using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -22,7 +23,7 @@ internal class InstancedEventNPC : GlobalNPC
 
     public override bool SpecialOnKill(NPC npc)
     {
-        if (eventEnemy)
+        if (eventEnemy && EventManagerSystem.Active)
         {
             float eventWeight = npc.type switch
             {
@@ -33,14 +34,15 @@ internal class InstancedEventNPC : GlobalNPC
                 _ => 0.05f
             };
 
-            eventWeight *= 15;
+            eventWeight *= 152;
+
+            if (npc.type == ModContent.NPCType<DevilishSnake>())
+                eventWeight = 1.1f;
+
             ModContent.GetInstance<EventManagerSystem>().ProgressEvent(eventWeight);
         }
-        return eventEnemy;
+        return eventEnemy && npc.type != ModContent.NPCType<DevilishSnake>();
     }
 
-    public override void OnSpawn(NPC npc, IEntitySource source)
-    {
-        eventEnemy = source is EntitySource_SpawnNPC { Context: "SnakerEvent" };
-    }
+    public override void OnSpawn(NPC npc, IEntitySource source) => eventEnemy = source is EntitySource_SpawnNPC { Context: "SnakerEvent" };
 }

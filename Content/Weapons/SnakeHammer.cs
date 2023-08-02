@@ -13,7 +13,7 @@ namespace Snaker.Content.Weapons;
 
 public class SnakeHammer : ModItem
 {
-	public override void SetStaticDefaults() => Tooltip.SetDefault("Explodes after a few seconds");
+	public override void SetStaticDefaults() => Tooltip.SetDefault("Charge to slam into the ground, hurting nearby enemies\nRight click to throw like a boomerang");
 
     public override void SetDefaults()
     {
@@ -25,7 +25,7 @@ public class SnakeHammer : ModItem
         Item.useStyle = ItemUseStyleID.Swing;
         Item.UseSound = SoundID.Item1;
         Item.DamageType = DamageClass.Melee;
-        Item.damage = 30;
+        Item.damage = 40;
         Item.crit = 5;
         Item.knockBack = 6;
         Item.rare = ItemRarityID.Purple;
@@ -73,7 +73,8 @@ internal class SnakeHammerSwung : ModProjectile
     private ref float Timer => ref Projectile.ai[0];
     private ref float Charge => ref Projectile.ai[1];
 
-    private List<SlashEffect> Particles = new();
+    private readonly List<SlashEffect> Particles = new();
+
     private bool _letGo = false;
 
     public override void SetDefaults()
@@ -90,6 +91,9 @@ internal class SnakeHammerSwung : ModProjectile
 
         DrawHeldProjInFrontOfHeldItemAndArms = true;
     }
+
+    public override bool? CanHitNPC(NPC target) => _letGo ? null : false;
+    public override bool? CanCutTiles() => _letGo ? null : false;
 
     public override void AI()
     {
@@ -129,7 +133,6 @@ internal class SnakeHammerSwung : ModProjectile
             item.Update();
 
         float armRot = Projectile.rotation - MathHelper.PiOver2 - MathHelper.PiOver4;
-        Owner.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Full, armRot);
         Owner.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, armRot);
 
         if (!Owner.channel || _letGo)
@@ -175,13 +178,14 @@ internal class SnakeHammerSwung : ModProjectile
             }
 
             Projectile.position = Projectile.Center;
-            Projectile.width = Projectile.height = 200;
+            Projectile.width = Projectile.height = 320;
             Projectile.position -= Projectile.Size / 2f;
             Projectile.friendly = true;
             Projectile.hide = true;
             Projectile.Damage();
             Projectile.Kill();
 
+            Collision.HitTiles(Projectile.position, new Vector2(0, -Main.rand.NextFloat(6, 12)), Projectile.width, Projectile.height);
             SoundEngine.PlaySound(SoundID.DD2_KoboldExplosion with { PitchVariance = 0.25f, Pitch = -0.75f }, Projectile.Center);
 
             PunchCameraModifier modifier = new(Projectile.Center, (Main.rand.NextFloat() * ((float)Math.PI * 2f)).ToRotationVector2(), 7f, 3f, 15, 1000f, "SnakeHammer");
@@ -266,16 +270,18 @@ internal class SnakeHammerThrown : ModProjectile
 
     public override void SetDefaults()
     {
-        Projectile.width = Projectile.height = 50;
+        Projectile.width = Projectile.height = 42;
         Projectile.aiStyle = 0;
         Projectile.friendly = true;
         Projectile.DamageType = DamageClass.Melee;
         Projectile.hostile = false;
-        Projectile.penetrate = -1;
+        Projectile.penetrate = 3;
         Projectile.timeLeft = 16;
-        Projectile.tileCollide = false;
+        Projectile.tileCollide = true;
         Projectile.ignoreWater = true;
         Projectile.extraUpdates = 1;
+        Projectile.localNPCHitCooldown = 20;
+        Projectile.usesLocalNPCImmunity = true;
 
         DrawHeldProjInFrontOfHeldItemAndArms = true;
     }
@@ -284,13 +290,30 @@ internal class SnakeHammerThrown : ModProjectile
     {
         Projectile.timeLeft++;
         Projectile.rotation += 0.25f;
+        Projectile.tileCollide = Timer > 6;
 
         if (Timer++ >= 30)
         {
             if (Projectile.Hitbox.Intersects(Owner.Hitbox))
                 Projectile.Kill();
 
-            Projectile.velocity = Vector2.SmoothStep(Projectile.velocity, Projectile.DirectionTo(Owner.Center) * 9, 0.2f);
+            Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.DirectionTo(Owner.Center) * 9, 0.2f);
         }
+    }
+
+    public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+    {
+        if (Projectile.penetrate == 1)
+        {
+            Projectile.penetrate++;
+            Timer = 30;
+        }
+    }
+
+    public override bool OnTileCollide(Vector2 oldVelocity)
+    {
+        Timer = 31;
+        Projectile.velocity = Projectile.DirectionTo(Owner.Center) * 9;
+        return false;
     }
 }

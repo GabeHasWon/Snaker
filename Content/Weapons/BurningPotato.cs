@@ -84,23 +84,9 @@ public class BurningPotatoProjectile : ModProjectile
 
 		if (Projectile.timeLeft == ExplodeTimeLeft)
 		{
-			for (int i = 0; i < 40; ++i)
-			{
-				Vector2 velocity = new Vector2(Main.rand.NextFloat(4, 8f), 0).RotatedByRandom(MathHelper.TwoPi);
-				Dust.NewDustDirect(Projectile.Center, 0, 0, DustID.Torch, 0, 0, Scale: Main.rand.NextFloat(1f, 2f)).velocity = velocity;
-			}
-
-			for (int i = 0; i < 8; ++i)
-			{
-				Vector2 velocity = new Vector2(Main.rand.NextFloat(2, 4), 0).RotatedByRandom(MathHelper.TwoPi);
-				Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, velocity, GoreID.Smoke1 + Main.rand.Next(3));
-			}
-
-			for (int i = 0; i < 4; ++i)
-			{
-				Vector2 velocity = new Vector2(Main.rand.NextFloat(3, 6f), 0).RotatedByRandom(MathHelper.TwoPi);
-				Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, velocity, GoreID.Smoke1 + Main.rand.Next(3));
-			}
+			ExplosionHelper.Fire(Projectile.Center, 40, Main.rand.NextFloat(1f, 2f), (4f, 8f));
+			ExplosionHelper.Smoke(Projectile.GetSource_Death(), Projectile.position, 8, (2, 4));
+			ExplosionHelper.Smoke(Projectile.GetSource_Death(), Projectile.position, 4, (3, 6));
 
 			Projectile.position = Projectile.Center;
 			Projectile.width = Projectile.height = 180;
