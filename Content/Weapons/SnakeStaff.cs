@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -80,7 +81,7 @@ internal class SnakeSummon : ModProjectile
     private NPC Target => Main.npc[TargetWhoAmI];
 
     private List<SnakeBody> bodies = new();
-    private int _minionNumber = 0;
+    private short _minionNumber = 0;
 
     public override void SetStaticDefaults() => _bodyTex = ModContent.Request<Texture2D>(Texture + "Body");
     public override void Unload() => _bodyTex = null;
@@ -102,6 +103,9 @@ internal class SnakeSummon : ModProjectile
         Projectile.localNPCHitCooldown = 10;
         Projectile.usesLocalNPCImmunity = true;
     }
+
+    public override void SendExtraAI(BinaryWriter writer) => writer.Write(_minionNumber);
+    public override void ReceiveExtraAI(BinaryReader reader) => _minionNumber = reader.ReadInt16();
 
     public override void OnSpawn(IEntitySource source)
     {
@@ -138,7 +142,7 @@ internal class SnakeSummon : ModProjectile
 
         if (State == SnakeState.Idle)
         {
-            SnakeyMovement(Owner.Center - new Vector2(0, 60 + (_minionNumber * 50)));
+            SnakeyMovement(Owner.Center - new Vector2(0, 60 + (_minionNumber * 50)).RotatedBy(Timer * 0.05f));
             ScanNearbyEnemies();
 
             if (Projectile.DistanceSQ(Owner.Center) > 1600 * 1600)
@@ -149,7 +153,7 @@ internal class SnakeSummon : ModProjectile
         }
         else if (State == SnakeState.AttackingRange)
         {
-            SnakeyMovement(Owner.Center - new Vector2(0, 100 + (_minionNumber * 50)), 1.2f);
+            SnakeyMovement(Owner.Center - new Vector2(0, 100 + (_minionNumber * 50)).RotatedBy(Timer * 0.05f), 1.2f);
 
             if (!Target.CanBeChasedBy() || Target.DistanceSQ(Projectile.Center) > MaxRangedRange * MaxRangedRange)
             {

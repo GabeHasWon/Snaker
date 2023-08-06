@@ -1,4 +1,5 @@
 ﻿using Snaker.Content.Enemies;
+using Snaker.Content.World;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -10,7 +11,7 @@ internal class EventGlobalNPC : GlobalNPC
 {
     public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
     {
-        if (EventManagerSystem.Active)
+        if (SubworldLibrary.SubworldSystem.Current is SnakerSubworld)
             maxSpawns = 0;
     }
 }
