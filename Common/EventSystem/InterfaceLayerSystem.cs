@@ -71,7 +71,7 @@ internal class InterfaceLayerSystem : ModSystem
 
         time = "SURVIVE!";
         origin = font.MeasureString(time) / 2f;
-        textPos = new(Main.screenWidth / 2f, Main.screenHeight - 120);
+        textPos = new(Main.screenWidth / 2f, Main.screenHeight - 160);
         ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, time, textPos, Color.LightGray, 0f, origin, Vector2.One * 0.75f);
     }
 }
