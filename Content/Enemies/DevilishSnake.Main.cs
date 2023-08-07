@@ -23,12 +23,12 @@ public partial class DevilishSnake : ModNPC
 	public override void SetDefaults()
 	{
 		NPC.aiStyle = -1;
-		NPC.lifeMax = 12000;
+		NPC.lifeMax = 2000;
 		NPC.defense = 18;
 		NPC.value = Item.buyPrice(0, 15, 0, 0);
 		NPC.knockBackResist = 0f;
 		NPC.width = 480;
-		NPC.height = 424;
+		NPC.height = 296;
 		NPC.damage = 0;
 		NPC.lavaImmune = true;
 		NPC.noGravity = true;
@@ -40,7 +40,7 @@ public partial class DevilishSnake : ModNPC
 		NPC.hide = true;
 	}
 
-	public override bool CheckActive() => true;
+	public override bool CheckActive() => false;
     public override void DrawBehind(int index) => Main.instance.DrawCacheNPCsBehindNonSolidTiles.Add(index);
 
     public override bool? CanBeHitByProjectile(Projectile projectile)
@@ -86,8 +86,22 @@ public partial class DevilishSnake : ModNPC
 		notExpertRule.AddCommon<SnakeTrophyItem>(10);
 		notExpertRule.AddCommon<BurningPotato>(1, 32, 43);
 		notExpertRule.AddCommon<SnakeBrick>(1, 10, 20);
-		notExpertRule.AddOneFromOptions<SnakeHammer, SnakeHammer>();
+		notExpertRule.AddOneFromOptions<SnakeHammer, SnakeStaff>();
 
 		npcLoot.Add(notExpertRule);
 	}
+
+    public override Color? GetAlpha(Color drawColor)
+    {
+		if (State == SnakeState.Survival)
+        {
+			if (Timer < 60)
+				return Color.White * Math.Max(1 - (Timer / 60f), 0.2f);
+			else if (Timer >= 60 && Timer < SurvivalLength - 60)
+				return Color.White * ((MathF.Sin(Timer * 0.03f) * 0.1f) + 0.2f);
+			else
+				return Color.White * Math.Min(Math.Max((Timer - (SurvivalLength - 60)) / 60f, 0.2f), 1f);
+        }
+		return Color.White;
+    }
 }

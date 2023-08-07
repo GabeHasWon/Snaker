@@ -10,6 +10,8 @@ namespace Snaker.Content.Enemies;
 
 public partial class DevilishSnake : ModNPC
 {
+    public const int SurvivalLength = 20 * 60;
+
     private static SnakerSubworld Subworld => SubworldSystem.Current as SnakerSubworld;
 
     public enum SnakeState : int 
@@ -23,7 +25,8 @@ public partial class DevilishSnake : ModNPC
     {
         Fireball,
         Mines,
-        Potato
+        Potato,
+        Tongue
     }
 
     public SnakeState State
@@ -46,6 +49,7 @@ public partial class DevilishSnake : ModNPC
 
     private Vector2 _targetPosition = new();
     private bool _survivalDone = false;
+    private int _tongueConnectTimer = 0;
 
     public override void AI()
     {
@@ -69,6 +73,8 @@ public partial class DevilishSnake : ModNPC
     {
         NPC.hide = true;
         NPC.dontTakeDamage = true;
+        NPC.rotation *= 0.99f;
+        NPC.Center = Vector2.Lerp(NPC.Center, new Vector2(SubworldSystem.Current.Width * 11, SubworldSystem.Current.Height * 9.5f), 0.04f);
 
         Timer++;
 
@@ -83,7 +89,7 @@ public partial class DevilishSnake : ModNPC
             Main.projectile[proj].scale = MathHelper.Lerp(vel.Y / 12f, 1f, 0.5f);
         }
 
-        if (Timer >= 20 * 60)
+        if (Timer >= SurvivalLength)
         {
             State = SnakeState.MoveUpDown;
             AttackState = SnakeAttackState.Fireball;
@@ -127,6 +133,7 @@ public partial class DevilishSnake : ModNPC
             SnakeAttackState.Fireball => 160,
             SnakeAttackState.Mines => 240,
             SnakeAttackState.Potato => 320,
+            SnakeAttackState.Tongue => 300,
             _ => 300
         };
 
@@ -142,6 +149,7 @@ public partial class DevilishSnake : ModNPC
             float factor = NPC.life / (float)NPC.lifeMax * mod;
             cutoff = (int)(cutoff * factor);
         }
+
         SubAttack(cutoff);
 
         if (AttackTimer == cutoff)
@@ -149,8 +157,15 @@ public partial class DevilishSnake : ModNPC
             AttackTimer = 0;
             AttackState++;
 
+            if (Main.rand.NextBool(6))
+            {
+                AttackState = SnakeAttackState.Tongue;
+                NPC.netUpdate = true;
+            }
+
             if (AttackState > SnakeAttackState.Potato)
                 AttackState = SnakeAttackState.Fireball;
+            AttackState = SnakeAttackState.Tongue;
         }
     }
 
@@ -168,12 +183,7 @@ public partial class DevilishSnake : ModNPC
                 }
                 break;
             case SnakeAttackState.Mines:
-                if (AttackTimer < 20) //slow down the boss to sell the effort of mines
-                    Timer -= 0.8f * (1 - (AttackTimer / 20f)) + 0.2f;
-                else if (AttackTimer >= 20 && AttackTimer <= cutoff - 20)
-                    Timer--;
-                if (AttackTimer > cutoff - 20)
-                    Timer -= 0.8f * ((cutoff - AttackTimer) / 20f) + 0.2f;
+                SlowDown(cutoff);
 
                 if (AttackTimer % 12 == 0)
                 {
@@ -199,9 +209,31 @@ public partial class DevilishSnake : ModNPC
                     Main.projectile[proj].frame = Main.rand.Next(3);
                 }
                 break;
+            case SnakeAttackState.Tongue:
+                if (AttackTimer == cutoff / 4)
+                {
+                    NPC.TargetClosest();
+
+                    Vector2 vel = NPC.DirectionTo(Target.Center) * 12 + (Target.velocity * 0.5f);
+                    Vector2 pos = SnakeTongue.GetOriginLocation(NPC);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<SnakeTongue>(), 30, 3f, Main.myPlayer, ai0: cutoff / 2);
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    private void SlowDown(int cutoff, float fadeTime = 20f, float maxSlowDown = 0.8f)
+    {
+        float baseAdj = 1 - maxSlowDown;
+
+        if (AttackTimer < fadeTime) //slow down the boss to sell the effort of mines
+            Timer -= maxSlowDown * (1 - (AttackTimer / fadeTime)) + baseAdj;
+        else if (AttackTimer >= fadeTime && AttackTimer <= cutoff - fadeTime)
+            Timer -= maxSlowDown;
+        if (AttackTimer > cutoff - fadeTime)
+            Timer -= maxSlowDown * ((cutoff - AttackTimer) / fadeTime) + baseAdj;
     }
 
     private void IntroBehaviour()

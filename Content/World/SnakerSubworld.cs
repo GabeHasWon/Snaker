@@ -32,6 +32,8 @@ internal class SnakerSubworld : Subworld
         
         for (int i = 0; i < Width; ++i)
         {
+            bool randomPillar = WorldGen.genRand.NextBool(6);
+
             for (int j = 0; j < Height; ++j)
             {
                 if (i < 50 || i > Width - 50 || j < 110 || j > Height - 50)
@@ -43,7 +45,7 @@ internal class SnakerSubworld : Subworld
                 }
                 else
                 {
-                    if (!WorldGen.genRand.NextBool(5) && i % 15 <= 2)
+                    if (!WorldGen.genRand.NextBool(5) && (i % 15 <= 2 || randomPillar))
                         WorldGen.PlaceWall(i, j, WallID.ObsidianBrickUnsafe, true);
 
                     if (j > 60 && j % 30 == 0)

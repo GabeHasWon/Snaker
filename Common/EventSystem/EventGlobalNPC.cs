@@ -35,7 +35,15 @@ internal class InstancedEventNPC : GlobalNPC
                 _ => 0.05f
             };
 
-            eventWeight *= 152;
+            eventWeight *= 200;
+            eventWeight *= EventManagerSystem.Wave switch
+            {
+                EventManagerSystem.EventStage.First => 1f,
+                EventManagerSystem.EventStage.Second => 0.9f,
+                EventManagerSystem.EventStage.Third => 0.8f,
+                EventManagerSystem.EventStage.Fourth => 0.6f,
+                _ => 0.4f
+            };
 
             if (npc.type == ModContent.NPCType<DevilishSnake>())
                 eventWeight = 1.1f;
