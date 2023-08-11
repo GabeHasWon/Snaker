@@ -157,15 +157,14 @@ public partial class DevilishSnake : ModNPC
             AttackTimer = 0;
             AttackState++;
 
-            if (Main.rand.NextBool(6))
+            if (Main.rand.NextBool(1))
             {
                 AttackState = SnakeAttackState.Tongue;
                 NPC.netUpdate = true;
             }
-
-            if (AttackState > SnakeAttackState.Potato)
+            else if (AttackState > SnakeAttackState.Potato)
                 AttackState = SnakeAttackState.Fireball;
-            AttackState = SnakeAttackState.Fireball;
+            //AttackState = SnakeAttackState.Tongue;
         }
     }
 
@@ -213,9 +212,9 @@ public partial class DevilishSnake : ModNPC
                 {
                     NPC.TargetClosest();
 
-                    Vector2 vel = NPC.DirectionTo(Target.Center) * 12 + (Target.velocity.SafeNormalize(Vector2.Zero) * 3.5f);
+                    Vector2 vel = NPC.DirectionTo(Target.Center) * 14 + (Target.velocity.SafeNormalize(Vector2.Zero) * 3.5f);
                     Vector2 pos = SnakeTongue.GetOriginLocation(NPC);
-                    Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<SnakeTongue>(), 30, 3f, Main.myPlayer, ai0: cutoff / 2);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<SnakeTongue>(), 18, 3f, Main.myPlayer);
                 }
                 break;
             default:
