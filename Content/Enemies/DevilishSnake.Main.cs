@@ -58,7 +58,7 @@ public partial class DevilishSnake : ModNPC
 		});
 	}
 
-	public override void HitEffect(int hitDirection, double damage)
+	public override void HitEffect(NPC.HitInfo hit)
 	{
 		if (NPC.life <= 0 && Main.netMode != NetmodeID.Server)
 		{
@@ -71,8 +71,8 @@ public partial class DevilishSnake : ModNPC
 			const int ShrinkFactor = 60;
 
 			Vector2 adjPos = NPC.position + new Vector2(ShrinkFactor / 2);
-			Dust.NewDust(adjPos, NPC.width - ShrinkFactor, NPC.height - ShrinkFactor, DustID.Blood, 2.5f * hitDirection, -2.5f, 0, default, 1.2f);
-			Dust.NewDust(adjPos, NPC.width - ShrinkFactor, NPC.height - ShrinkFactor, DustID.RedMoss, 2.5f * hitDirection, -2.5f, 0, default, 1.2f);
+			Dust.NewDust(adjPos, NPC.width - ShrinkFactor, NPC.height - ShrinkFactor, DustID.Blood, 2.5f * hit.HitDirection, -2.5f, 0, default, 1.2f);
+			Dust.NewDust(adjPos, NPC.width - ShrinkFactor, NPC.height - ShrinkFactor, DustID.RedMoss, 2.5f * hit.HitDirection, -2.5f, 0, default, 1.2f);
 		}
 	}
 

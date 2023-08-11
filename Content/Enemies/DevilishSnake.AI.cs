@@ -74,7 +74,7 @@ public partial class DevilishSnake : ModNPC
         NPC.hide = true;
         NPC.dontTakeDamage = true;
         NPC.rotation *= 0.99f;
-        NPC.Center = Vector2.Lerp(NPC.Center, new Vector2(SubworldSystem.Current.Width * 11, SubworldSystem.Current.Height * 9.5f), 0.04f);
+        NPC.Center = Vector2.Lerp(NPC.Center, new Vector2(SubworldSystem.Current.Width * 11, SubworldSystem.Current.Height * 9.5f), 0.01f);
 
         Timer++;
 
@@ -165,7 +165,7 @@ public partial class DevilishSnake : ModNPC
 
             if (AttackState > SnakeAttackState.Potato)
                 AttackState = SnakeAttackState.Fireball;
-            AttackState = SnakeAttackState.Tongue;
+            AttackState = SnakeAttackState.Fireball;
         }
     }
 
@@ -205,8 +205,7 @@ public partial class DevilishSnake : ModNPC
                     float y = Main.rand.NextFloat(Subworld.OpenTop + 10, Subworld.OpenCenter) * 16;
                     var vel = GetArcVel(NPC.Center, new Vector2(x, y), SnakePotato.Gravity, maxXvel: 8f);
 
-                    int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<SnakePotato>(), 30, 3f, Main.myPlayer);
-                    Main.projectile[proj].frame = Main.rand.Next(3);
+                    Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<SnakePotato>(), 30, 3f, Main.myPlayer);
                 }
                 break;
             case SnakeAttackState.Tongue:
@@ -214,7 +213,7 @@ public partial class DevilishSnake : ModNPC
                 {
                     NPC.TargetClosest();
 
-                    Vector2 vel = NPC.DirectionTo(Target.Center) * 12 + (Target.velocity * 0.5f);
+                    Vector2 vel = NPC.DirectionTo(Target.Center) * 12 + (Target.velocity.SafeNormalize(Vector2.Zero) * 3.5f);
                     Vector2 pos = SnakeTongue.GetOriginLocation(NPC);
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<SnakeTongue>(), 30, 3f, Main.myPlayer, ai0: cutoff / 2);
                 }

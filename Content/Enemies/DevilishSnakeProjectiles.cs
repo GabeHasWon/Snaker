@@ -18,6 +18,8 @@ internal class SnakeFireball : ModProjectile
 {
     private ref float Timer => ref Projectile.ai[0];
 
+    public override void SetStaticDefaults() => Main.projFrames[Type] = 3;
+
     public override void SetDefaults()
     {
         Projectile.width = Projectile.height = 200;
@@ -29,18 +31,28 @@ internal class SnakeFireball : ModProjectile
         Projectile.timeLeft = 160000;
         Projectile.tileCollide = true;
         Projectile.ignoreWater = false;
+        Projectile.alpha = 80;
     }
 
     public override void AI()
     {
-        Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.Pi;
+        Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
+
+        if (Projectile.frameCounter++ > 8)
+        {
+            Projectile.frameCounter = 0;
+
+            if (++Projectile.frame >= Main.projFrames[Type])
+                Projectile.frame = 0;
+        }
 
         Timer++;
 
         if (Timer % 15 == 0)
         {
             var pos = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width * 0.5f, Projectile.height * 0.5f);
-            Projectile.NewProjectile(Projectile.GetSource_FromAI(), pos, Vector2.Zero, ModContent.ProjectileType<SnakeFireballTrail>(), 40, 3f, Main.myPlayer);
+            var vel = Projectile.velocity.RotatedByRandom(0.5f) * Main.rand.NextFloat(0.2f, 0.5f);
+            Projectile.NewProjectile(Projectile.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<SnakeFireballTrail>(), 40, 3f, Main.myPlayer);
         }
 
         if (!Main.rand.NextBool(3))
@@ -49,16 +61,36 @@ internal class SnakeFireball : ModProjectile
 
     public override void Kill(int timeLeft)
     {
-        
+        ExplosionHelper.Fire(Projectile.Center, 60, Main.rand.NextFloat(2, 4f), (3, 7));
+        ExplosionHelper.Smoke(Projectile.GetSource_Death(), Projectile.Center, 10, (3, 7));
+
+        PunchCameraModifier modifier = new(Projectile.Center, (Main.rand.NextFloat() * ((float)Math.PI * 2f)).ToRotationVector2(), 10, 3, 20, 1500, "Fireball");
+        Main.instance.CameraModifiers.Add(modifier);
+    }
+
+    public override bool PreDraw(ref Color lightColor)
+    {
+        Texture2D tex = TextureAssets.Projectile[Type].Value;
+        int frameHeight = tex.Height / Main.projFrames[Type];
+
+        for (int i = 0; i < 2; ++i)
+        {
+            Rectangle frame = new(0, frameHeight * Projectile.frame, tex.Width, frameHeight);
+            SpriteEffects effect = i % 2 == 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, frame, Color.White * Projectile.Opacity, Projectile.rotation, frame.Size() / 2f, 1f, effect, 0);
+        }
+        return false;
     }
 }
 
 internal class SnakeFireballTrail : ModProjectile
 {
+    public override void SetStaticDefaults() => Main.projFrames[Type] = 4;
+
     public override void SetDefaults()
     {
-        Projectile.width = 34;
-        Projectile.height = 48;
+        Projectile.width = 44;
+        Projectile.height = 44;
         Projectile.aiStyle = 0;
         Projectile.friendly = false;
         Projectile.DamageType = DamageClass.Magic;
@@ -67,6 +99,7 @@ internal class SnakeFireballTrail : ModProjectile
         Projectile.timeLeft = 60;
         Projectile.tileCollide = true;
         Projectile.ignoreWater = false;
+        Projectile.alpha = 200;
     }
 
     public override void OnSpawn(IEntitySource source) => Projectile.rotation = Main.rand.NextFloat(-MathHelper.PiOver2, MathHelper.PiOver2);
@@ -74,6 +107,18 @@ internal class SnakeFireballTrail : ModProjectile
     public override void AI()
     {
         Projectile.Opacity = Projectile.timeLeft / 60f;
+        Projectile.velocity *= 0.98f;
+
+        if (Projectile.frameCounter++ > 5)
+        {
+            Projectile.frameCounter = 0;
+
+            if (++Projectile.frame >= Main.projFrames[Type])
+                Projectile.frame = 0;
+        }
+
+        if (Projectile.velocity.LengthSquared() > 0)
+            Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
         if (Main.rand.NextBool(5))
             Dust.NewDust(Projectile.position + new Vector2(4), Projectile.width - 8, Projectile.height - 8, DustID.Torch);
@@ -81,7 +126,7 @@ internal class SnakeFireballTrail : ModProjectile
 
     public override void Kill(int timeLeft)
     {
-
+        ExplosionHelper.Fire(Projectile.Center, 8, Main.rand.NextFloat(1, 2), (2, 4));
     }
 }
 
@@ -194,8 +239,6 @@ internal class SnakePotato : ModProjectile
 {
     public const float Gravity = 0.02f;
 
-    public override void SetStaticDefaults() => Main.projFrames[Type] = 3;
-
     public override void SetDefaults()
     {
         Projectile.width = 114;
@@ -233,7 +276,11 @@ internal class SnakePotato : ModProjectile
 
     public override void Kill(int timeLeft)
     {
-
+        if (Main.netMode != NetmodeID.Server)
+        {
+            for (int i = 0; i < 3; ++i)
+                Gore.NewGore(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, Mod.Find<ModGore>("BigPotato" + i).Type, 1f);
+        }
     }
 }
 
@@ -314,7 +361,10 @@ internal class SnakeTongue : ModProjectile
     {
         Timer++;
 
-        Projectile.rotation = Projectile.AngleTo(OriginLocation) + MathHelper.PiOver2;
+        Projectile.rotation = Projectile.AngleTo(OriginLocation) - MathHelper.PiOver2;
+
+        if (!Parent.active)
+            Projectile.Kill();
 
         if (Timer > (60 * 62 / _originalVelMagnitude))
         {
@@ -329,7 +379,6 @@ internal class SnakeTongue : ModProjectile
                 Projectile.Kill();
         }
     }
-
 
     public override bool PreDraw(ref Color lightColor)
     {
@@ -354,7 +403,7 @@ internal class SnakeTongue : ModProjectile
             Main.EntitySpriteDraw(tex, adjPos, new Rectangle(6, 14, 6, 14), col, Projectile.rotation, Vector2.Zero, 1f, SpriteEffects.None, 0);
         }
 
-        Main.EntitySpriteDraw(tex, drawPos, new Rectangle(0, 0, 18, 12), Color.White, Projectile.rotation, new Vector2(9, 6), 1f, SpriteEffects.None, 0);
+        Main.EntitySpriteDraw(tex, drawPos, new Rectangle(0, 0, 18, 12), Color.White, Projectile.rotation, new Vector2(6, -2), 1f, SpriteEffects.None, 0);
         return false;
     }
 }

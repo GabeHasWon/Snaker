@@ -20,7 +20,7 @@ internal class SnakerArenaBiome : ModBiome
 	public override Color? BackgroundColor => Color.AntiqueWhite;
 	public override string MapBackground => "Snaker/Assets/Images/SnakeArena_MapBG";
 
-	public override void SetStaticDefaults() => DisplayName.SetDefault("Devilish Snake Arena");
+	// public override void SetStaticDefaults() => DisplayName.SetDefault("Devilish Snake Arena");
 	public override bool IsBiomeActive(Player player) => SubworldSystem.IsActive<SnakerSubworld>();
 }
 
@@ -35,13 +35,13 @@ public class SnakerAreaBackground : ModSurfaceBackgroundStyle
 	{
 		bgTopYField = typeof(Main).GetField("bgTopY", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        On.Terraria.Graphics.Effects.SkyManager.ProcessCloudAlpha += SkyManager_ProcessCloudAlpha;
+        Terraria.Graphics.Effects.On_SkyManager.ProcessCloudAlpha += SkyManager_ProcessCloudAlpha;
 	}
 
 	/// <summary>
 	/// I don't want to make a CustomSky just to disable clouds. Here's a fix!
 	/// </summary>
-    private float SkyManager_ProcessCloudAlpha(On.Terraria.Graphics.Effects.SkyManager.orig_ProcessCloudAlpha orig, SkyManager self)
+    private float SkyManager_ProcessCloudAlpha(Terraria.Graphics.Effects.On_SkyManager.orig_ProcessCloudAlpha orig, SkyManager self)
     {
 		if (SubworldSystem.IsActive<SnakerSubworld>())
 			return 0f;

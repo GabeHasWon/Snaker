@@ -1,0 +1,103 @@
+Tiles: {
+	SnakeDecor.MapEntry: Snake Decor
+	SnakePaintingTile.MapEntry: Snake Painting Tile
+	SnakePortalTile.MapEntry: Snake Portal Tile
+	SnakeTrophy.MapEntry: Snake Trophy
+}
+
+Biomes: {
+	SnakerArenaBiome: {
+		DisplayName: Snake Arena Biome
+		TownNPCDialogueName: the Snake Arena Biome
+	}
+}
+
+Buffs: {
+	SnakeSummonBuff: {
+		DisplayName: Snake Summon Buff
+		Description: "'Surprisingly powerful!'"
+	}
+}
+
+Items: {
+	FireyLamp: {
+		DisplayName: Firey Lamp
+		Tooltip:
+			'''
+			+30 max health
+			Taking damage spawns homing snakes that hurt enemies
+			'''
+	}
+
+	SnakeBrick: {
+		DisplayName: Snake Brick
+		Tooltip: ""
+	}
+
+	SnakePainting: {
+		DisplayName: Snake Painting
+		Tooltip: "'Simply exquisite'"
+	}
+
+	SnakePortal: {
+		DisplayName: Snake Portal
+		Tooltip: "'Ornate yet natural'"
+	}
+
+	SnakeRelicItem: {
+		DisplayName: Devilish Snake Relic
+		Tooltip: ""
+	}
+
+	SnakeTrophyItem: {
+		DisplayName: Devilish Snake Trophy
+		Tooltip: ""
+	}
+
+	SnakeBag: {
+		DisplayName: Treasure Bag (Devilish Snake)
+		Tooltip: ""
+	}
+
+	BurningPotato: {
+		DisplayName: Burning Potato
+		Tooltip: Explodes after a few seconds
+	}
+
+	SnakeHammer: {
+		DisplayName: Snake Hammer
+		Tooltip:
+			'''
+			Left click to charge, dealing an area of effect hit
+			Right click to throw like a boomerang
+			'''
+	}
+
+	SnakeStaff: {
+		DisplayName: Snake Staff
+		Tooltip: Summons a baby Devilish Snake to fight for you
+	}
+}
+
+NPCs: {
+	EventNPCSpawner.DisplayName: Event NPC Spawner
+	DevilishSnake.DisplayName: Devilish Snake
+}
+
+Projectiles: {
+	LampSnake.DisplayName: Lamp Snake
+	SnakeFireball.DisplayName: Snake Fireball
+	SnakeFireballTrail.DisplayName: Snake Fireball Trail
+	SnakeMeteorPotato.DisplayName: Snake Meteor Potato
+	SnakeMine.DisplayName: Snake Mine
+	SnakePotato.DisplayName: Snake Potato
+	SnakeTongue.DisplayName: Snake Tongue
+	BurningPotatoProjectile.DisplayName: Burning Potato
+	SnakeHammerSwung.DisplayName: Snake Hammer
+	SnakeHammerThrown.DisplayName: Snake Hammer
+	SnakeSummon.DisplayName: Snake Summon
+	SnakeSummonFireball.DisplayName: Snake Summon Fireball
+}
+
+DevilishSnakeSpawnInfo: Enter the Snake Arena and beat the enemies.
+DevilishSnakeEventDefeat: The furious aura mists away...

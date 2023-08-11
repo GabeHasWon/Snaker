@@ -108,5 +108,10 @@ public class SnakeRelic : BaseRelic<SnakeRelicItem> { }
 
 public class SnakeRelicItem : ModItem
 {
-	public override void SetDefaults() => Item.DefaultToPlaceableTile(ModContent.TileType<SnakeRelic>());
+	public override void SetDefaults()
+	{
+		Item.DefaultToPlaceableTile(ModContent.TileType<SnakeRelic>());
+		Item.master = true;
+		Item.rare = ItemRarityID.Master;
+	}
 }

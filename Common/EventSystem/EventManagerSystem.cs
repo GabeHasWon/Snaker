@@ -9,11 +9,14 @@ using Terraria.DataStructures;
 using Terraria.Chat;
 using Snaker.Content.Enemies;
 using Snaker.Content;
+using Terraria.ModLoader.IO;
 
 namespace Snaker.Common.EventSystem;
 
 internal class EventManagerSystem : ModSystem
 {
+    public static bool downedSnakeEvent = false;
+
     public enum EventStage
     {
         First,
@@ -27,11 +30,30 @@ internal class EventManagerSystem : ModSystem
     public static EventStage Wave => ModContent.GetInstance<EventManagerSystem>()._wave;
     public static float WaveProgress => ModContent.GetInstance<EventManagerSystem>()._waveProgress;
 
+
     private EventStage _wave;
     private bool _active;
     private float _waveProgress;
 
     private WeightedRandom<int> _spawnChoices = new();
+
+    public override void ClearWorld()
+    {
+        if (SubworldSystem.Current is not null) 
+            downedSnakeEvent = false;
+    }
+
+    public override void SaveWorldData(TagCompound tag)
+    {
+        if (downedSnakeEvent)
+            tag.Add(nameof(downedSnakeEvent), downedSnakeEvent);
+    }
+
+    public override void LoadWorldData(TagCompound tag)
+    {
+        if (tag.ContainsKey(nameof(downedSnakeEvent)))
+            downedSnakeEvent = true;
+    }
 
     public void StartEvent()
     {
@@ -48,7 +70,10 @@ internal class EventManagerSystem : ModSystem
         _active = false;
 
         if (announce)
-            ChatHelper.BroadcastChatMessage(Terraria.Localization.NetworkText.FromLiteral("The furious aura mists away..."), Color.White);
+        {
+            downedSnakeEvent = true;
+            ChatHelper.BroadcastChatMessage(Terraria.Localization.NetworkText.FromKey("Mods.Snaker.DevilishSnakeEventDefeat"), Color.White);
+        }
     }
 
     private void SetSpawnChoices()

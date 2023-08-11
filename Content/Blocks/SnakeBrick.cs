@@ -23,6 +23,5 @@ internal class SnakeBrickTile : ModTile
 		MinPick = 100;
 		DustType = -1;
 		HitSound = SoundID.Tink;
-		ItemDrop = ModContent.ItemType<SnakeBrick>();
 	}
 }

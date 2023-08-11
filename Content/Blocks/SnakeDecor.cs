@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -28,8 +29,8 @@ public class SnakeDecor : ModTile
 
 		DustType = DustID.Grass;
 
-		ModTranslation name = CreateMapEntryName();
-		name.SetDefault("Kelp");
+		LocalizedText name = CreateMapEntryName();
+		// name.SetDefault("Kelp");
 		AddMapEntry(new Color(63, 47, 58), name);
 	}
 

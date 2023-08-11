@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -34,8 +35,8 @@ public class SnakePaintingTile : ModTile
 
 		DustType -= 1;
 
-		ModTranslation name = CreateMapEntryName();
-		name.SetDefault("Painting");
+		LocalizedText name = CreateMapEntryName();
+		// name.SetDefault("Painting");
 		AddMapEntry(new Color(99, 68, 51), name);
 	}
 

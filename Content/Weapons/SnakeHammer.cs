@@ -13,7 +13,7 @@ namespace Snaker.Content.Weapons;
 
 public class SnakeHammer : ModItem
 {
-	public override void SetStaticDefaults() => Tooltip.SetDefault("Charge to slam into the ground, hurting nearby enemies\nRight click to throw like a boomerang");
+	// public override void SetStaticDefaults() => Tooltip.SetDefault("Charge to slam into the ground, hurting nearby enemies\nRight click to throw like a boomerang");
 
     public override void SetDefaults()
     {
@@ -193,7 +193,7 @@ internal class SnakeHammerSwung : ModProjectile
         }
     }
 
-    public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection) => hitDirection = Main.MouseWorld.X <= Owner.Center.X ? -1 : 1;
+    public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers) => modifiers.HitDirectionOverride = Main.MouseWorld.X <= Owner.Center.X ? -1 : 1;
 
     public override bool PreDraw(ref Color lightColor)
     {
@@ -301,7 +301,7 @@ internal class SnakeHammerThrown : ModProjectile
         }
     }
 
-    public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+    public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
         if (Projectile.penetrate == 1)
         {

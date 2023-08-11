@@ -13,7 +13,7 @@ namespace Snaker.Content.Weapons;
 
 internal class SnakeStaff : ModItem
 {
-    public override void SetStaticDefaults() => Tooltip.SetDefault("Summons little snakes to fight for you\nSnakes do rapid melee damage, and shoot fireballs at range");
+    // public override void SetStaticDefaults() => Tooltip.SetDefault("Summons little snakes to fight for you\nSnakes do rapid melee damage, and shoot fireballs at range");
 
     public override void SetDefaults()
     {
@@ -291,8 +291,8 @@ public class SnakeSummonBuff : ModBuff
 {
     public override void SetStaticDefaults()
     {
-        DisplayName.SetDefault("Devilish Snakeling");
-        Description.SetDefault("'A small, frail-looking devil snake follows you'");
+        // DisplayName.SetDefault("Devilish Snakeling");
+        // Description.SetDefault("'A small, frail-looking devil snake follows you'");
         Main.buffNoSave[Type] = true;
         Main.buffNoTimeDisplay[Type] = true;
     }

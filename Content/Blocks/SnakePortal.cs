@@ -10,6 +10,7 @@ using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -40,8 +41,8 @@ public class SnakePortalTile : ModTile
 
 		DustType = DustID.Obsidian;
 
-		ModTranslation name = CreateMapEntryName();
-		name.SetDefault("Portal");
+		LocalizedText name = CreateMapEntryName();
+		// name.SetDefault("Portal");
 		AddMapEntry(new Color(51, 50, 69), name);
 	}
 

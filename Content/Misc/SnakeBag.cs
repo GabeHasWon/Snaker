@@ -16,13 +16,7 @@ public abstract class BossBagItem : ModItem
 {
 	internal abstract string BossName { get; }
 
-	public sealed override void SetStaticDefaults()
-	{
-		DisplayName.SetDefault($"Treasure Bag ({BossName})");
-		Tooltip.SetDefault("Consumable\n{$CommonItemTooltip.RightClickToOpen}");
-
-		StaticDefaults();
-	}
+	public sealed override void SetStaticDefaults() => StaticDefaults();
 
 	public sealed override void SetDefaults()
 	{
@@ -117,7 +111,14 @@ public class SnakeBag : BossBagItem
 {
 	internal override string BossName => "Devilish Snake";
 
-	public override void ModifyItemLoot(ItemLoot itemLoot)
+    public override void StaticDefaults()
+    {
+		ItemID.Sets.BossBag[Type] = true;
+
+		Item.ResearchUnlockCount = 3;
+	}
+
+    public override void ModifyItemLoot(ItemLoot itemLoot)
 	{
 		itemLoot.AddOneFromOptions<SnakeHammer, SnakeHammer>();
 		itemLoot.AddCommon<SnakePainting>(7);

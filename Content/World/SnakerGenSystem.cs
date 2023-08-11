@@ -11,7 +11,7 @@ namespace Snaker.Content.World;
 
 internal class SnakerGenSystem : ModSystem
 {
-    public override void ModifyWorldGenTasks(List<GenPass> tasks, ref float totalWeight)
+    public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
     {
         int index = tasks.FindIndex(x => x.Name == "Settle Liquids Again");
 

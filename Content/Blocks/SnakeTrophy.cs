@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -24,8 +25,7 @@ public class SnakeTrophy : ModTile
 
 		DustType = DustID.WoodFurniture;
 
-		ModTranslation name = CreateMapEntryName();
-		name.SetDefault("Devilish Snake Trophy");
+		LocalizedText name = CreateMapEntryName();
 		AddMapEntry(new Color(120, 85, 60), name);
 	}
 
@@ -35,6 +35,9 @@ public class SnakeTrophy : ModTile
 
 public class SnakeTrophyItem : ModItem
 {
-	public override void SetStaticDefaults() => DisplayName.SetDefault("Devilish Snake Trophy");
-	public override void SetDefaults() => Item.DefaultToPlaceableTile(ModContent.TileType<SnakeTrophy>());
+	public override void SetDefaults()
+	{
+		Item.DefaultToPlaceableTile(ModContent.TileType<SnakeTrophy>());
+		Item.rare = ItemRarityID.Blue;
+	}
 }

@@ -10,7 +10,7 @@ public class FireyLamp : ModItem
 {
 	public override void SetStaticDefaults()
 	{
-		Tooltip.SetDefault("+30 max health\nSpawns homing snakes when hit\n'An otherworldly glow billows from the top'");
+		// Tooltip.SetDefault("+30 max health\nSpawns homing snakes when hit\n'An otherworldly glow billows from the top'");
 	}
 
 	public override void SetDefaults()
@@ -39,7 +39,7 @@ internal class LampModPlayer : ModPlayer
 
 	public override void ResetEffects() => active = false;
 
-	public override void Hurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit, int cooldownCounter)
+	public override void OnHurt(Player.HurtInfo info)
 	{
 		if (!active)
 			return;
@@ -132,10 +132,10 @@ internal class LampSnake : ModProjectile
         }
 	}
 
-    public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+    public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
     {
-		if (damage < Projectile.damage + (target.defense / 2))
-			damage = Projectile.damage + (target.defense / 2);
+		if (modifiers.FinalDamage.Base < Projectile.damage + (target.defense / 2))
+			modifiers.FinalDamage.Base = Projectile.damage + (target.defense / 2);
     }
 
     public override void Kill(int timeLeft) => ExplosionHelper.Fire(Projectile.Center, 15, Main.rand.NextFloat(0.8f, 1.5f), (2, 4));
