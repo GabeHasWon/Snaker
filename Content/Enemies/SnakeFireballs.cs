@@ -32,6 +32,8 @@ internal class SnakeFireball : ModProjectile
 
     public override void AI()
     {
+        Lighting.AddLight(Projectile.Center, TorchID.Torch);
+
         Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
         if (Projectile.frameCounter++ > 8)
@@ -53,6 +55,8 @@ internal class SnakeFireball : ModProjectile
 
         if (!Main.rand.NextBool(3))
             Dust.NewDust(Projectile.position + new Vector2(20), Projectile.width - 40, Projectile.height - 40, DustID.Torch, Scale: Main.rand.NextFloat(1f, 3f));
+
+        Lighting.AddLight(Projectile.Center, TorchID.Torch);
     }
 
     public override void Kill(int timeLeft)
@@ -73,7 +77,8 @@ internal class SnakeFireball : ModProjectile
         {
             Rectangle frame = new(0, frameHeight * Projectile.frame, tex.Width, frameHeight);
             SpriteEffects effect = i % 2 == 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, frame, Color.White * Projectile.Opacity, Projectile.rotation, frame.Size() / 2f, 1f, effect, 0);
+            Color col = Color.Lerp(Lighting.GetColor(Projectile.Center.ToTileCoordinates()), Color.Pink, 0.33f);
+            Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition, frame, col * Projectile.Opacity, Projectile.rotation, frame.Size() / 2f, 1f, effect, 0);
         }
         return false;
     }

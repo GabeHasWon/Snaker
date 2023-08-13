@@ -81,7 +81,16 @@ Items: {
 
 NPCs: {
 	EventNPCSpawner.DisplayName: Event NPC Spawner
-	DevilishSnake.DisplayName: Devilish Snake
+
+	DevilishSnake: {
+		DisplayName: Devilish Snake
+		Bestiary: A gargantuan snake, reveling in the depths of a forgotten land, hidden away in the Underworld. Has a confusing penchant for tubers.
+	}
+
+	PotatoBeeFireAnt: {
+		DisplayName: Potato Bee Fire Ant
+		Bestiary: An unnatural mix of potato and insect. Despite the relatively soft, starchy body - it still hurts!
+	}
 }
 
 Projectiles: {

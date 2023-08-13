@@ -62,7 +62,7 @@ internal class LampModPlayer : ModPlayer
 		for (int i = 0; i < SnakeCount; ++i)
 		{
 			Vector2 vel = (i / SnakeCount * MathHelper.TwoPi).ToRotationVector2() * 12;
-			int proj = Projectile.NewProjectile(Player.GetSource_OnHurt(null), Player.Center, vel, ModContent.ProjectileType<LampSnake>(), dmg, 0f, Player.whoAmI);
+			int proj = Projectile.NewProjectile(Player.GetSource_OnHurt(info.DamageSource), Player.Center, vel, ModContent.ProjectileType<LampSnake>(), dmg, 0f, Player.whoAmI);
 			Main.projectile[proj].ai[0] = Main.rand.Next(npcs);
 		}
 

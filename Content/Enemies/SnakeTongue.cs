@@ -135,7 +135,12 @@ internal class SnakeTongue : ModProjectile
             Main.EntitySpriteDraw(tex, adjPos, new Rectangle(24, 46, 14, 14), col, Projectile.rotation, new Vector2(7), 1f, SpriteEffects.None, 0);
         }
 
-        Main.EntitySpriteDraw(tex, drawPos, new Rectangle(0, 0, 62, 44), Color.White, Projectile.rotation, new Vector2(31, 22), 1f, SpriteEffects.None, 0);
+        Color endColor = Lighting.GetColor(Projectile.Center.ToTileCoordinates());
+        float endDistanceToAnchor = Vector2.DistanceSquared(OriginLocation, Projectile.Center);
+        if (endDistanceToAnchor < TongueFadeDistance * TongueFadeDistance)
+            endColor *= endDistanceToAnchor / (TongueFadeDistance * TongueFadeDistance);
+
+        Main.EntitySpriteDraw(tex, drawPos, new Rectangle(0, 0, 62, 44), endColor, Projectile.rotation, new Vector2(31, 22), 1f, SpriteEffects.None, 0);
         return false;
     }
 }

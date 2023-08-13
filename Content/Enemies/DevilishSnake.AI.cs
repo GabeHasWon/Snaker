@@ -49,7 +49,6 @@ public partial class DevilishSnake : ModNPC
 
     private Vector2 _targetPosition = new();
     private bool _survivalDone = false;
-    private int _tongueConnectTimer = 0;
 
     public override void AI()
     {
@@ -119,7 +118,6 @@ public partial class DevilishSnake : ModNPC
         int y = (int)(SubworldSystem.Current.Height * 9.5f);
 
         _targetPosition = new Vector2(x + (MathF.Sin(Timer * 0.01f) * (15 * 16)), y + (MathF.Sin(Timer * 0.0075f) * (78 * 16)));
-
         NPC.Center = Vector2.Lerp(NPC.Center, _targetPosition, 0.04f);
 
         float finalRotation = NPC.Center.Y > Target.Center.Y ? NPC.AngleTo(Target.Center) + MathHelper.Pi : NPC.AngleTo(Target.Center) - MathHelper.Pi;
@@ -157,14 +155,13 @@ public partial class DevilishSnake : ModNPC
             AttackTimer = 0;
             AttackState++;
 
-            if (Main.rand.NextBool(1))
+            if (Main.rand.NextBool(6))
             {
                 AttackState = SnakeAttackState.Tongue;
                 NPC.netUpdate = true;
             }
             else if (AttackState > SnakeAttackState.Potato)
                 AttackState = SnakeAttackState.Fireball;
-            //AttackState = SnakeAttackState.Tongue;
         }
     }
 

@@ -9,21 +9,30 @@ using Snaker.Content.Blocks;
 using System;
 using Microsoft.Xna.Framework;
 using Snaker.Content.Misc;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 
 namespace Snaker.Content.Enemies;
 
+[AutoloadBossHead]
 public partial class DevilishSnake : ModNPC
 {
-	public override void SetStaticDefaults()
+	static Asset<Texture2D> _bodyTexture;
+
+    public override void SetStaticDefaults()
 	{
 		Main.npcFrameCount[NPC.type] = 1;
 		NPCHelper.BuffImmune(Type);
+
+		_bodyTexture = ModContent.Request<Texture2D>(Texture + "BodySegment");
 	}
 
-	public override void SetDefaults()
+	public override void Unload() => _bodyTexture = null;
+
+    public override void SetDefaults()
 	{
 		NPC.aiStyle = -1;
-		NPC.lifeMax = 2000;
+		NPC.lifeMax = 12000;
 		NPC.defense = 18;
 		NPC.value = Item.buyPrice(0, 15, 0, 0);
 		NPC.knockBackResist = 0f;
@@ -54,7 +63,7 @@ public partial class DevilishSnake : ModNPC
 	{
 		bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
 			BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheCorruption,
-			new FlavorTextBestiaryInfoElement("A gargantuan snake, reveling in the depths of a forgotten land, hidden away in the Underworld. Has a confusing penchant for tubers."),
+			new FlavorTextBestiaryInfoElement("Mods.Snaker.NPCs.DevilishSnake.Bestiary"),
 		});
 	}
 
@@ -96,12 +105,12 @@ public partial class DevilishSnake : ModNPC
 		if (State == SnakeState.Survival)
         {
 			if (Timer < 60)
-				return Color.White * Math.Max(1 - (Timer / 60f), 0.2f);
+				return drawColor * Math.Max(1 - (Timer / 60f), 0.2f);
 			else if (Timer >= 60 && Timer < SurvivalLength - 60)
-				return Color.White * ((MathF.Sin(Timer * 0.03f) * 0.1f) + 0.2f);
+				return drawColor * ((MathF.Sin(Timer * 0.03f) * 0.1f) + 0.2f);
 			else
-				return Color.White * Math.Min(Math.Max((Timer - (SurvivalLength - 60)) / 60f, 0.2f), 1f);
+				return drawColor * Math.Min(Math.Max((Timer - (SurvivalLength - 60)) / 60f, 0.2f), 1f);
         }
-		return Color.White;
+		return drawColor;
     }
 }

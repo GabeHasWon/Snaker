@@ -66,12 +66,19 @@ public class SnakePortalTile : ModTile
 
     public override bool RightClick(int i, int j)
     {
-		SubworldSystem.Enter<SnakerSubworld>();
-		return true;
+		if (Main.hardMode)
+		{
+			SubworldSystem.Enter<SnakerSubworld>();
+			return true;
+		}
+		return false;
     }
 
     public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
     {
+		if (!Main.hardMode)
+			return;
+
 		Tile tile = Main.tile[i, j];
 
 		if (tile.TileFrameX != 72 || tile.TileFrameY != 72)

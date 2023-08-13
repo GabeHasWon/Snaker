@@ -24,31 +24,34 @@ internal class InstancedEventNPC : GlobalNPC
 
     public override bool SpecialOnKill(NPC npc)
     {
-        if (eventEnemy && EventManagerSystem.Active)
+        if (eventEnemy && SnakeArenaSystem.Active)
         {
             float eventWeight = npc.type switch
             {
-                NPCID.Lavabat => 0.0025f,
-                NPCID.RedDevil => 0.01f,
-                NPCID.Demon => 0.005f,
-                NPCID.FireImp => 0.003f,
-                _ => 0.05f
+                NPCID.Hellbat => 0.02f,
+                NPCID.Lavabat => 0.06f,
+                NPCID.RedDevil => 0.1f,
+                NPCID.Demon => 0.65f,
+                NPCID.FireImp => 0.07f,
+                _ => 0.05f //Covers PotatoBeeFireAnt
             };
 
-            eventWeight *= 200;
-            eventWeight *= EventManagerSystem.Wave switch
+            eventWeight *= SnakeArenaSystem.Wave switch
             {
-                EventManagerSystem.EventStage.First => 1f,
-                EventManagerSystem.EventStage.Second => 0.9f,
-                EventManagerSystem.EventStage.Third => 0.8f,
-                EventManagerSystem.EventStage.Fourth => 0.6f,
-                _ => 0.4f
+                SnakeArenaSystem.EventStage.First => 1f,
+                SnakeArenaSystem.EventStage.Second => 0.85f,
+                SnakeArenaSystem.EventStage.Third => 0.6f,
+                SnakeArenaSystem.EventStage.Fourth => 0.4f,
+                _ => 1f
             };
+
+            if (Main.masterMode) //Master mode sucks and I ain't making it better
+                eventWeight *= 0.8f;
 
             if (npc.type == ModContent.NPCType<DevilishSnake>())
                 eventWeight = 1.1f;
 
-            ModContent.GetInstance<EventManagerSystem>().ProgressEvent(eventWeight);
+            ModContent.GetInstance<SnakeArenaSystem>().ProgressEvent(eventWeight);
         }
         return eventEnemy && npc.type != ModContent.NPCType<DevilishSnake>();
     }

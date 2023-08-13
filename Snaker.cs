@@ -18,7 +18,7 @@ public class Snaker : Mod
 			this,
 			nameof(DevilishSnake),
 			7.2f,
-			() => EventManagerSystem.downedSnakeEvent,
+			() => SnakeArenaSystem.downedSnakeEvent,
 			ModContent.NPCType<DevilishSnake>(),
 			new Dictionary<string, object>()
 			{

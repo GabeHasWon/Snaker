@@ -22,15 +22,20 @@ internal class InterfaceLayerSystem : ModSystem
 			"Snaker: Snake Event Progress",
 			delegate
 			{
-				if (!SubworldLibrary.SubworldSystem.IsActive<SnakerSubworld>() || !EventManagerSystem.Active)
+				if (!SubworldLibrary.SubworldSystem.IsActive<SnakerSubworld>() || !SnakeArenaSystem.Active)
 					return true;
 
 				Texture2D tex = ModContent.Request<Texture2D>("Snaker/Assets/Images/UI/EventBar").Value;
 				var pos = new Vector2(Main.screenWidth / 2 - (tex.Width / 2f), 12);
                 DrawProgressBarProgress(pos);
 
-				Main.spriteBatch.Draw(tex, pos, Color.White);
-				return true;
+				Main.spriteBatch.Draw(tex, pos, Color.White); //Bar
+
+                var font = FontAssets.DeathText.Value; //Wave number
+                string wave = SnakeArenaSystem.Wave + " Wave";
+                Vector2 origin = font.MeasureString(wave) / 2f;
+                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, wave, new Vector2(Main.screenWidth / 2f, 110), Color.White, 0f, origin, new(0.6f));
+                return true;
 			},
 			InterfaceScaleType.UI)
 		);
@@ -38,14 +43,14 @@ internal class InterfaceLayerSystem : ModSystem
 
 	private static void DrawProgressBarProgress(Vector2 pos)
     {
-        float progress = (float)EventManagerSystem.Wave / 5f + (EventManagerSystem.WaveProgress / 5f);
+        float progress = (float)SnakeArenaSystem.Wave / 5f + (SnakeArenaSystem.WaveProgress / 5f);
         float width = 186 * progress;
         Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, pos + new Vector2(10, 50), new Rectangle(0, 0, (int)width, 12), Color.Orange);
 
         float emptyWidth = 186 * (1 - progress);
         Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, pos + new Vector2(10 + (int)width, 50), new Rectangle(0, 0, (int)emptyWidth, 12), Color.Gray);
 
-        if (EventManagerSystem.Wave != EventManagerSystem.EventStage.Boss)
+        if (SnakeArenaSystem.Wave != SnakeArenaSystem.EventStage.Boss)
             return;
 
         DrawSurvivalTimer();

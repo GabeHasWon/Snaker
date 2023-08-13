@@ -29,6 +29,8 @@ internal class SnakePotato : ModProjectile
         Projectile.velocity.Y += Gravity;
         Projectile.rotation += Projectile.velocity.X * 0.01f;
 
+        Lighting.AddLight(Projectile.Center, TorchID.Torch);
+
         if ((Projectile.timeLeft + 1) % 10 == 0)
         {
             var vel = Main.rand.NextFloat(MathHelper.TwoPi).ToRotationVector2();

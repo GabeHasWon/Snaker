@@ -13,7 +13,7 @@ using Terraria.ModLoader.IO;
 
 namespace Snaker.Common.EventSystem;
 
-internal class EventManagerSystem : ModSystem
+internal class SnakeArenaSystem : ModSystem
 {
     public static bool downedSnakeEvent = false;
 
@@ -26,9 +26,9 @@ internal class EventManagerSystem : ModSystem
         Boss
     }
 
-    public static bool Active => ModContent.GetInstance<EventManagerSystem>()._active;
-    public static EventStage Wave => ModContent.GetInstance<EventManagerSystem>()._wave;
-    public static float WaveProgress => ModContent.GetInstance<EventManagerSystem>()._waveProgress;
+    public static bool Active => ModContent.GetInstance<SnakeArenaSystem>()._active;
+    public static EventStage Wave => ModContent.GetInstance<SnakeArenaSystem>()._wave;
+    public static float WaveProgress => ModContent.GetInstance<SnakeArenaSystem>()._waveProgress;
 
 
     private EventStage _wave;
@@ -83,6 +83,7 @@ internal class EventManagerSystem : ModSystem
         switch (_wave)
         {
             case EventStage.First:
+                _spawnChoices.Add(NPCID.Hellbat, 1f);
                 _spawnChoices.Add(NPCID.FireImp, 0.6f);
                 _spawnChoices.Add(NPCID.Lavabat, 0.8f);
                 break;
@@ -96,10 +97,12 @@ internal class EventManagerSystem : ModSystem
                 _spawnChoices.Add(NPCID.Lavabat, 0.5f);
                 _spawnChoices.Add(NPCID.Demon, 0.8f);
                 _spawnChoices.Add(NPCID.RedDevil, 0.1f);
+                _spawnChoices.Add(ModContent.NPCType<PotatoBeeFireAnt>(), 0.2f);
                 break;
             case EventStage.Fourth:
                 _spawnChoices.Add(NPCID.Demon, 0.8f);
-                _spawnChoices.Add(NPCID.RedDevil, 0.2f);
+                _spawnChoices.Add(NPCID.RedDevil, 0.4f);
+                _spawnChoices.Add(ModContent.NPCType<PotatoBeeFireAnt>(), 0.6f);
                 break;
             default:
                 break;
@@ -161,6 +164,20 @@ internal class EventManagerSystem : ModSystem
 
     public override void PreUpdateNPCs()
     {
+        if (!_active)
+            return;
+
+        if (!Main.getGoodWorld)
+        {
+            Main.dayTime = true;
+            Main.time = 26000;
+        }
+        else
+        {
+            Main.dayTime = false;
+            Main.time = 16000;
+        }
+
         int count = 0;
 
         if (_wave == EventStage.Boss) //Set progress to boss's health
