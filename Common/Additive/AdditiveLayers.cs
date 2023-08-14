@@ -8,12 +8,12 @@ internal class AdditiveLayers : ILoadable
 {
     public void Load(Mod mod)
     {
-        Terraria.On_Main.DrawProjectiles += Main_DrawProjectiles;
+        On_Main.DrawProjectiles += Main_DrawProjectiles;
     }
 
     public void Unload() { }
 
-    private void Main_DrawProjectiles(Terraria.On_Main.orig_DrawProjectiles orig, Main self)
+    private void Main_DrawProjectiles(On_Main.orig_DrawProjectiles orig, Main self)
     {
         orig(self);
 

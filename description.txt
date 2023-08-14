@@ -1,1 +1,20 @@
-Snaker is a pretty cool mod, it does...this. Modify this file with a description of your mod.
+----- Devilish Arena ------
+by GabeHasWon and LetsGo with art from Pyxis
+commissioned by LetsGo
+
+A devilish (and starchy!) threat has appeared in the Underworld!
+An Arena has appeared within the Underworld, replete with enemies and a massive snake!
+Defeat them and the massive Devilish Snake to get some nice rewards.
+
+----
+
+In new worlds, a large tower structure will spawn with a broken portal.
+The portal slowly recovers as the player progresses, and in Hardmode, is fully repaired.
+Therein the player can fight the event.
+
+----
+
+As mentioned above, this was commissioned by LetsGo! 
+This was a very fun project, using Subworlds for the first time was a joy, and creating the Devilish Snake was fun.
+
+If YOU (the reader) want to commission something (just about anything!) reach me on Twitter (what's X?) or on Discord @gabehaswon.

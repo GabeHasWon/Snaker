@@ -20,7 +20,7 @@ internal class SnakeBrickTile : ModTile
 
 		AddMapEntry(new Color(70, 71, 65));
 
-		MinPick = 100;
+		MinPick = 101;
 		DustType = -1;
 		HitSound = SoundID.Tink;
 	}

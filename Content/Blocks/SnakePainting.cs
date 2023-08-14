@@ -36,7 +36,6 @@ public class SnakePaintingTile : ModTile
 		DustType -= 1;
 
 		LocalizedText name = CreateMapEntryName();
-		// name.SetDefault("Painting");
 		AddMapEntry(new Color(99, 68, 51), name);
 	}
 

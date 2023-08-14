@@ -40,9 +40,9 @@ public class SnakePortalTile : ModTile
 		TileObjectData.addTile(Type);
 
 		DustType = DustID.Obsidian;
+		MinPick = 101;
 
 		LocalizedText name = CreateMapEntryName();
-		// name.SetDefault("Portal");
 		AddMapEntry(new Color(51, 50, 69), name);
 	}
 

@@ -99,18 +99,4 @@ public partial class DevilishSnake : ModNPC
 
 		npcLoot.Add(notExpertRule);
 	}
-
-    public override Color? GetAlpha(Color drawColor)
-    {
-		if (State == SnakeState.Survival)
-        {
-			if (Timer < 60)
-				return drawColor * Math.Max(1 - (Timer / 60f), 0.2f);
-			else if (Timer >= 60 && Timer < SurvivalLength - 60)
-				return drawColor * ((MathF.Sin(Timer * 0.03f) * 0.1f) + 0.2f);
-			else
-				return drawColor * Math.Min(Math.Max((Timer - (SurvivalLength - 60)) / 60f, 0.2f), 1f);
-        }
-		return drawColor;
-    }
 }

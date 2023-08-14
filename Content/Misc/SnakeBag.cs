@@ -120,7 +120,7 @@ public class SnakeBag : BossBagItem
 
     public override void ModifyItemLoot(ItemLoot itemLoot)
 	{
-		itemLoot.AddOneFromOptions<SnakeHammer, SnakeHammer>();
+		itemLoot.AddOneFromOptions<SnakeHammer, SnakeStaff>();
 		itemLoot.AddCommon<SnakePainting>(7);
 		itemLoot.AddCommon<BurningPotato>(1, 32, 43);
 		AddBossItems<SnakeTrophyItem>(itemLoot, 5..9);

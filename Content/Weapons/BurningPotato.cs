@@ -9,8 +9,6 @@ namespace Snaker.Content.Weapons;
 
 public class BurningPotato : ModItem
 {
-	// public override void SetStaticDefaults() => Tooltip.SetDefault("Explodes after a few seconds");
-
 	public override void SetDefaults()
 	{
 		Item.damage = 70;

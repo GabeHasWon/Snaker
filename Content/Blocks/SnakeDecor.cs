@@ -30,7 +30,6 @@ public class SnakeDecor : ModTile
 		DustType = DustID.Grass;
 
 		LocalizedText name = CreateMapEntryName();
-		// name.SetDefault("Kelp");
 		AddMapEntry(new Color(63, 47, 58), name);
 	}
 

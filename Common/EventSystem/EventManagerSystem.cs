@@ -10,6 +10,7 @@ using Terraria.Chat;
 using Snaker.Content.Enemies;
 using Snaker.Content;
 using Terraria.ModLoader.IO;
+using Snaker.Content.World;
 
 namespace Snaker.Common.EventSystem;
 
@@ -141,7 +142,7 @@ internal class SnakeArenaSystem : ModSystem
                 }
             }
 
-            int x = SubworldSystem.Current.Width * 16 + (14 * 40);
+            int x = (SubworldSystem.Current as SnakerSubworld).OpenRight * 16 + 1400;
             int y = SubworldSystem.Current.Height * 10;
             int spawn = NPC.NewNPC(new EntitySource_SpawnNPC("Event"), x, y, ModContent.NPCType<DevilishSnake>());
             Main.npc[spawn].GetGlobalNPC<InstancedEventNPC>().eventEnemy = true;

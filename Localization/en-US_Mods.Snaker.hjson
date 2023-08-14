@@ -1,7 +1,7 @@
 Tiles: {
-	SnakeDecor.MapEntry: Snake Decor
-	SnakePaintingTile.MapEntry: Snake Painting Tile
-	SnakePortalTile.MapEntry: Snake Portal Tile
+	SnakeDecor.MapEntry: Rubble
+	SnakePaintingTile.MapEntry: Snake Painting
+	SnakePortalTile.MapEntry: Portal
 	SnakeTrophy.MapEntry: Snake Trophy
 }
 
@@ -14,7 +14,7 @@ Biomes: {
 
 Buffs: {
 	SnakeSummonBuff: {
-		DisplayName: Snake Summon Buff
+		DisplayName: Devilish Snakeling
 		Description: "'Surprisingly powerful!'"
 	}
 }
@@ -26,6 +26,7 @@ Items: {
 			'''
 			+30 max health
 			Taking damage spawns homing snakes that hurt enemies
+			'An otherworldly glow billows from the top'
 			'''
 	}
 
@@ -75,7 +76,11 @@ Items: {
 
 	SnakeStaff: {
 		DisplayName: Snake Staff
-		Tooltip: Summons a baby Devilish Snake to fight for you
+		Tooltip:
+			'''
+			Summons little snakes to fight for you
+			Snakes do rapid melee damage, and shoot fireballs at range
+			'''
 	}
 }
 

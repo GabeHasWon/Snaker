@@ -23,7 +23,6 @@ public class Snaker : Mod
 			new Dictionary<string, object>()
 			{
 				["spawnInfo"] = Language.GetText("Mods.Snaker.DevilishSnakeSpawnInfo")
-				// Other optional arguments as needed...
 			}
 		);
 	}

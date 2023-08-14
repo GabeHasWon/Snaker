@@ -1,5 +1,5 @@
-displayName = Snaker
+displayName = Devilish Arena
 author = GabeHasWon
-version = 0.1
+version = 1.0
 dllReferences = StructureHelper_v2.0.2
 modReferences = SubworldLibrary

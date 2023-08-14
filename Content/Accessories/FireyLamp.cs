@@ -8,11 +8,6 @@ namespace Snaker.Content.Accessories;
 
 public class FireyLamp : ModItem
 {
-	public override void SetStaticDefaults()
-	{
-		// Tooltip.SetDefault("+30 max health\nSpawns homing snakes when hit\n'An otherworldly glow billows from the top'");
-	}
-
 	public override void SetDefaults()
 	{
         Item.damage = 10;
@@ -67,7 +62,7 @@ internal class LampModPlayer : ModPlayer
 		}
 
 		ExplosionHelper.Fire(Player.Center, 40, Main.rand.NextFloat(1, 2f), (4, 8));
-		ExplosionHelper.Smoke(Player.GetSource_OnHurt(null), Player.Center, 40, (2, 4));
+		ExplosionHelper.Smoke(Player.GetSource_OnHurt(info.DamageSource), Player.Center, 40, (2, 4));
 	}
 }
 

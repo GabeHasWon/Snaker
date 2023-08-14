@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -19,12 +20,26 @@ public partial class DevilishSnake : ModNPC
         {
             rotation = MathHelper.Lerp(rotation, -MathHelper.PiOver2, 0.1f);
             scale = MathHelper.Lerp(scale, 1f, 0.2f);
-
+            
             var realDirection = direction.RotatedBy(rotation);
             var pos = basePos + (realDirection * i * 3f);
-            var col = Lighting.GetColor((pos + Main.screenPosition).ToTileCoordinates());
-            spriteBatch.Draw(tex, pos, null, col * (i > 6 ? 1 - ((i - 6) / 14f) : 1f), rotation, Vector2.Zero, scale, SpriteEffects.None, 0);
+            var col = GetAlpha(Lighting.GetColor((pos + Main.screenPosition).ToTileCoordinates())).Value * (i > 6 ? 1 - ((i - 6) / 14f) : 1f);
+            Main.EntitySpriteDraw(tex, pos, null, col, rotation, Vector2.Zero, scale, SpriteEffects.None, 0);
         }
         return true;
+    }
+
+    public override Color? GetAlpha(Color drawColor)
+    {
+        if (State == SnakeState.Survival)
+        {
+            if (Timer < 60)
+                return drawColor * Math.Max(1 - (Timer / 60f), 0.2f);
+            else if (Timer >= 60 && Timer < SurvivalLength - 60)
+                return drawColor * ((MathF.Sin(Timer * 0.03f) * 0.1f) + 0.2f);
+            else
+                return drawColor * Math.Min(Math.Max((Timer - (SurvivalLength - 60)) / 60f, 0.2f), 1f);
+        }
+        return drawColor;
     }
 }

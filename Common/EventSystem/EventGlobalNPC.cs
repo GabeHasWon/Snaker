@@ -30,8 +30,8 @@ internal class InstancedEventNPC : GlobalNPC
             {
                 NPCID.Hellbat => 0.02f,
                 NPCID.Lavabat => 0.06f,
-                NPCID.RedDevil => 0.1f,
-                NPCID.Demon => 0.65f,
+                NPCID.RedDevil => 0.2f,
+                NPCID.Demon => 0.1f,
                 NPCID.FireImp => 0.07f,
                 _ => 0.05f //Covers PotatoBeeFireAnt
             };
@@ -48,7 +48,7 @@ internal class InstancedEventNPC : GlobalNPC
             if (Main.masterMode) //Master mode sucks and I ain't making it better
                 eventWeight *= 0.8f;
 
-            if (npc.type == ModContent.NPCType<DevilishSnake>())
+            //if (npc.type == ModContent.NPCType<DevilishSnake>())
                 eventWeight = 1.1f;
 
             ModContent.GetInstance<SnakeArenaSystem>().ProgressEvent(eventWeight);

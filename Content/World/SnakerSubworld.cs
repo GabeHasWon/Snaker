@@ -36,7 +36,7 @@ internal class SnakerSubworld : Subworld
 
             for (int j = 0; j < Height; ++j)
             {
-                if (i < 50 || i > Width - 50 || j < 110 || j > Height - 50)
+                if (i < OpenLeft || i > OpenRight || j < OpenTop || j > OpenBottom)
                 {
                     WorldGen.PlaceTile(i, j, ModContent.TileType<SnakeBrickTile>(), true);
 
