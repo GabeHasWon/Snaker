@@ -1,0 +1,62 @@
+FireyLamp: {
+	DisplayName: Firey Lamp
+	Tooltip:
+		'''
+		+30 max health
+		Taking damage spawns homing snakes that hurt enemies
+		'An otherworldly glow billows from the top'
+		'''
+}
+
+SnakeBrick: {
+	DisplayName: Snake Brick
+	Tooltip: ""
+}
+
+SnakePainting: {
+	DisplayName: Snake Painting
+	Tooltip: "'Simply exquisite'"
+}
+
+SnakePortal: {
+	DisplayName: Snake Portal
+	Tooltip: "'Ornate yet natural'"
+}
+
+SnakeRelicItem: {
+	DisplayName: Devilish Snake Relic
+	Tooltip: ""
+}
+
+SnakeTrophyItem: {
+	DisplayName: Devilish Snake Trophy
+	Tooltip: ""
+}
+
+SnakeBag: {
+	DisplayName: Treasure Bag (Devilish Snake)
+	Tooltip: ""
+}
+
+BurningPotato: {
+	DisplayName: Burning Potato
+	Tooltip: Explodes after a few seconds
+}
+
+SnakeHammer: {
+	DisplayName: Snake Hammer
+	Tooltip:
+		'''
+		Left click to charge, dealing an area of effect hit
+		Right click to throw like a boomerang
+		'''
+}
+
+SnakeStaff: {
+	DisplayName: Snake Staff
+	Tooltip:
+		'''
+		Summons little snakes to fight for you
+		Snakes do rapid melee damage, and shoot fireballs at range
+		'''
+}

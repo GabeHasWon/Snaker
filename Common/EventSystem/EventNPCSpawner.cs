@@ -13,7 +13,7 @@ namespace Snaker.Common.EventSystem;
 
 internal class EventNPCSpawner : ModNPC
 {
-    const int MaxTimer = 250;
+    const int MaxTimer = 200;
 
     public override string Texture => "Snaker/Assets/Images/Empty";
 

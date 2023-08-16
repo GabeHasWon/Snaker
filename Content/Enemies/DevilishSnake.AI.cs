@@ -5,6 +5,8 @@ using Terraria;
 using Terraria.Graphics.CameraModifiers;
 using Terraria.ModLoader;
 using Snaker.Content.World;
+using Terraria.Audio;
+using Terraria.ID;
 
 namespace Snaker.Content.Enemies;
 
@@ -176,6 +178,7 @@ public partial class DevilishSnake : ModNPC
                 {
                     var vel = NPC.DirectionTo(Target.Center).RotatedByRandom(0.5f) * 7;
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<SnakeFireball>(), 60, 3f, Main.myPlayer);
+                    SoundEngine.PlaySound(SoundID.DD2_BetsyFireballShot, SnakeTongue.GetOriginLocation(NPC));
                 }
                 break;
             case SnakeAttackState.Mines:
@@ -190,6 +193,7 @@ public partial class DevilishSnake : ModNPC
                     int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<SnakeMine>(), 60, 3f, Main.myPlayer);
                     Main.projectile[proj].ai[0] = y;
                     Main.projectile[proj].frame = Main.rand.Next(3);
+                    SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing with { Pitch = 0.8f, PitchVariance = 0.2f }, NPC.Center);
                 }
                 break;
             case SnakeAttackState.Potato:
@@ -202,6 +206,10 @@ public partial class DevilishSnake : ModNPC
                     var vel = GetArcVel(NPC.Center, new Vector2(x, y), SnakePotato.Gravity, maxXvel: 8f);
 
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<SnakePotato>(), 30, 3f, Main.myPlayer);
+                    SoundEngine.PlaySound(SoundID.NPCDeath12 with { Pitch = -0.2f, PitchVariance = 0.2f }, NPC.Center);
+
+                    PunchCameraModifier modifier = new(NPC.Center, (Main.rand.NextFloat() * ((float)Math.PI * 2f)).ToRotationVector2(), 6f, 3f, 10, 4000, "DevilishSnake");
+                    Main.instance.CameraModifiers.Add(modifier);
                 }
                 break;
             case SnakeAttackState.Tongue:
@@ -212,6 +220,7 @@ public partial class DevilishSnake : ModNPC
                     Vector2 vel = NPC.DirectionTo(Target.Center) * 14 + (Target.velocity.SafeNormalize(Vector2.Zero) * 3.5f);
                     Vector2 pos = SnakeTongue.GetOriginLocation(NPC);
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<SnakeTongue>(), 18, 3f, Main.myPlayer);
+                    SoundEngine.PlaySound(SoundID.Item1 with { Pitch = -0.5f, PitchVariance = 0.2f }, NPC.Center);
                 }
                 break;
             default:
@@ -251,6 +260,9 @@ public partial class DevilishSnake : ModNPC
             NPC.velocity.X *= 0.8f;
         else if (Timer < 260)
         {
+            if (Timer == 201)
+                SoundEngine.PlaySound(SoundID.Roar with { PitchVariance = 0.1f, Pitch = -0.2f });
+
             PunchCameraModifier modifier = new(NPC.Center, (Main.rand.NextFloat() * ((float)Math.PI * 2f)).ToRotationVector2(), 10f, 3f, 2, 5000, "DevilishSnake");
             Main.instance.CameraModifiers.Add(modifier);
             NPC.velocity.X *= 0.8f;

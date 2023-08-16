@@ -11,6 +11,7 @@ using Snaker.Content.Enemies;
 using Snaker.Content;
 using Terraria.ModLoader.IO;
 using Snaker.Content.World;
+using Terraria.Localization;
 
 namespace Snaker.Common.EventSystem;
 
@@ -142,6 +143,19 @@ internal class SnakeArenaSystem : ModSystem
                 }
             }
 
+            for (int i = 0; i < Main.maxProjectiles; ++i)
+            {
+                Projectile proj = Main.projectile[i];
+
+                if (proj.active && proj.hostile)
+                {
+                    proj.active = false;
+
+                    ExplosionHelper.Fire(proj.position - proj.Size / 2f, 20, Main.rand.NextFloat(1.5f, 2.5f), (7f, 12f));
+                    ExplosionHelper.Smoke(proj.GetSource_Death(), proj.position, 3, (2f, 4f));
+                }
+            }
+
             int x = (SubworldSystem.Current as SnakerSubworld).OpenRight * 16 + 1400;
             int y = SubworldSystem.Current.Height * 10;
             int spawn = NPC.NewNPC(new EntitySource_SpawnNPC("Event"), x, y, ModContent.NPCType<DevilishSnake>());
@@ -154,13 +168,14 @@ internal class SnakeArenaSystem : ModSystem
         string spawns = "";
 
         if (_wave == EventStage.Boss)
-            spawns = "Devilish Snake  ";
+            spawns = Lang.GetNPCName(ModContent.NPCType<DevilishSnake>()).Value + "  ";
         else
             foreach (var item in _spawnChoices.elements)
                 spawns += Lang.GetNPCName(item.Item1) + ", ";
 
-        string text = $"{_wave} Wave: {spawns[..(spawns.Length - 2)]}";
-        ChatHelper.BroadcastChatMessage(Terraria.Localization.NetworkText.FromLiteral(text), Color.White);
+        string text = $"{spawns[..(spawns.Length - 2)]}";
+        string chat = Language.GetText("Mods.Snaker.DevilishSnakeEventWave").WithFormatArgs(Language.GetTextValue("Mods.Snaker.EventWaves." + Wave), text).Value;
+        ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral(chat), Color.IndianRed);
     }
 
     public override void PreUpdateNPCs()

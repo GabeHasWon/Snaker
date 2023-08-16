@@ -48,7 +48,7 @@ internal class InstancedEventNPC : GlobalNPC
             if (Main.masterMode) //Master mode sucks and I ain't making it better
                 eventWeight *= 0.8f;
 
-            //if (npc.type == ModContent.NPCType<DevilishSnake>())
+            if (npc.type == ModContent.NPCType<DevilishSnake>())
                 eventWeight = 1.1f;
 
             ModContent.GetInstance<SnakeArenaSystem>().ProgressEvent(eventWeight);

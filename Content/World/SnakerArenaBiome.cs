@@ -1,18 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Snaker.Content.Enemies;
 using SubworldLibrary;
 using System.Reflection;
 using Terraria;
 using Terraria.GameContent.Skies;
 using Terraria.Graphics.Capture;
 using Terraria.Graphics.Effects;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Snaker.Content.World;
 
 internal class SnakerArenaBiome : ModBiome
 {
-	public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/Arena");
+	public override int Music => NPC.AnyNPCs(ModContent.NPCType<DevilishSnake>()) ? MusicID.Boss3 : MusicID.Eerie;
 	public override SceneEffectPriority Priority => SceneEffectPriority.BossMedium;
 	public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Normal;
 	public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.Find<ModSurfaceBackgroundStyle>("Snaker/SnakerAreaBackground");

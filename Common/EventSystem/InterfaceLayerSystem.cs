@@ -2,11 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using Snaker.Content.Enemies;
 using Snaker.Content.World;
-using System;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.Chat;
 using Terraria.GameContent;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
@@ -32,7 +31,9 @@ internal class InterfaceLayerSystem : ModSystem
 				Main.spriteBatch.Draw(tex, pos, Color.White); //Bar
 
                 var font = FontAssets.DeathText.Value; //Wave number
-                string wave = SnakeArenaSystem.Wave + " Wave";
+                string progress = (SnakeArenaSystem.WaveProgress * 100).ToString("#0.#") + "%";
+                string wave = Language.GetText("Mods.Snaker.DevilishSnakeEventWave")
+                    .WithFormatArgs(Language.GetTextValue("Mods.Snaker.EventWaves." + SnakeArenaSystem.Wave), progress).Value;
                 Vector2 origin = font.MeasureString(wave) / 2f;
                 ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, wave, new Vector2(Main.screenWidth / 2f, 110), Color.White, 0f, origin, new(0.6f));
                 return true;
@@ -68,15 +69,15 @@ internal class InterfaceLayerSystem : ModSystem
         if (boss.State != DevilishSnake.SnakeState.Survival)
             return;
 
-        string time = (boss.Timer / 60f).ToString("0.00");
+        string text = (boss.Timer / 60f).ToString("0.00");
         var font = FontAssets.DeathText.Value;
-        Vector2 origin = font.MeasureString(time) / 2f;
+        Vector2 origin = font.MeasureString(text) / 2f;
         Vector2 textPos = new(Main.screenWidth / 2f, Main.screenHeight - 120);
-        ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, time, textPos, Color.White, 0f, origin, Vector2.One);
+        ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, text, textPos, Color.White, 0f, origin, Vector2.One);
 
-        time = "SURVIVE!";
-        origin = font.MeasureString(time) / 2f;
+        text = Language.GetTextValue("Mods.Snaker.SurviveText");
+        origin = font.MeasureString(text) / 2f;
         textPos = new(Main.screenWidth / 2f, Main.screenHeight - 160);
-        ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, time, textPos, Color.LightGray, 0f, origin, Vector2.One * 0.75f);
+        ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, text, textPos, Color.LightGray, 0f, origin, Vector2.One * 0.75f);
     }
 }

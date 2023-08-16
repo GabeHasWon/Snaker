@@ -71,13 +71,37 @@ public partial class DevilishSnake : ModNPC
 	{
 		if (NPC.life <= 0 && Main.netMode != NetmodeID.Server)
 		{
-			for (int i = 1; i < 5; ++i)
-				Gore.NewGore(NPC.GetSource_Death(), NPC.position, NPC.velocity, GoreID.AmbientAirborneCloud1, 1f);
-		}
+			Vector2 Offset(int distance, float rotation) => (rotation - MathHelper.PiOver2 + NPC.rotation).ToRotationVector2() * distance;
+
+            Gore.NewGore(NPC.GetSource_Death(), NPC.Center + Offset(100, -MathHelper.PiOver4), NPC.velocity, Mod.Find<ModGore>("DevilishSnake0").Type, 1f);
+            Gore.NewGore(NPC.GetSource_Death(), NPC.Center + Offset(200, -MathHelper.PiOver2 - (MathHelper.PiOver4 / 3f)), NPC.velocity, Mod.Find<ModGore>("DevilishSnake1").Type, 1f);
+            Gore.NewGore(NPC.GetSource_Death(), NPC.Center + Offset(100, MathHelper.PiOver4 / 2f), NPC.velocity, Mod.Find<ModGore>("DevilishSnake2").Type, 1f);
+            Gore.NewGore(NPC.GetSource_Death(), NPC.Center + Offset(200, -MathHelper.PiOver4), NPC.velocity, Mod.Find<ModGore>("DevilishSnake3").Type, 1f);
+
+            //Body gores
+            Vector2 direction = new Vector2(0, 106).RotatedBy(0.2f) * 0.12f;
+            Vector2 basePos = NPC.Center + direction;
+            float rotation = NPC.rotation;
+            float scale = 0.85f;
+
+            for (int i = 0; i < 20; ++i)
+            {
+                rotation = MathHelper.Lerp(rotation, -MathHelper.PiOver2, 0.1f);
+                scale = MathHelper.Lerp(scale, 1f, 0.2f);
+
+                var realDirection = direction.RotatedBy(rotation);
+                var pos = basePos + (realDirection * i * 3f);
+
+				var gore = Gore.NewGoreDirect(NPC.GetSource_Death(), pos - new Vector2(0, 160), NPC.velocity, Mod.Find<ModGore>("DevilishSnakeBody").Type, 1f);
+
+				if (i > 6)
+					gore.alpha = (int)(((i - 6) / 14f) * 255);
+            }
+        }
 
 		for (int k = 0; k < 20; k++)
 		{
-			const int ShrinkFactor = 60;
+			const int ShrinkFactor = 100;
 
 			Vector2 adjPos = NPC.position + new Vector2(ShrinkFactor / 2);
 			Dust.NewDust(adjPos, NPC.width - ShrinkFactor, NPC.height - ShrinkFactor, DustID.Blood, 2.5f * hit.HitDirection, -2.5f, 0, default, 1.2f);
