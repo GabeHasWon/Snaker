@@ -10,7 +10,7 @@ FireyLamp: {
 
 SnakeBrick: {
 	DisplayName: Snake Brick
-	Tooltip: ""
+	Tooltip: "'Despite everything, cool to the touch'"
 }
 
 SnakePainting: {
