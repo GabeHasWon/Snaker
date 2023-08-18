@@ -32,18 +32,17 @@ public class PotatoBeeFireAnt : ModNPC
 	{
 		NPC.aiStyle = -1;
 		NPC.lifeMax = 200;
-		NPC.defense = 18;
+		NPC.defense = 30;
 		NPC.value = Item.buyPrice(0, 0, 0, 0);
 		NPC.knockBackResist = 0f;
 		NPC.width = 46;
 		NPC.height = 44;
-		NPC.damage = 24;
+		NPC.damage = 50;
 		NPC.lavaImmune = true;
 		NPC.noGravity = true;
 		NPC.noTileCollide = true;
 		NPC.HitSound = SoundID.DD2_SkeletonHurt;
 		NPC.DeathSound = SoundID.DD2_SkeletonDeath;
-		NPC.dontTakeDamage = false;
 	}
 
     public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

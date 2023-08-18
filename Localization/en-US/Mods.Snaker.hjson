@@ -34,9 +34,9 @@ NPCs: {
 }
 
 Projectiles: {
-	LampSnake.DisplayName: Lamp Snake
-	SnakeFireball.DisplayName: Snake Fireball
-	SnakeFireballTrail.DisplayName: Snake Fireball Trail
+	LampSnake.DisplayName: Shadesnake
+	SnakeFireball.DisplayName: Fireball
+	SnakeFireballTrail.DisplayName: Fireball
 	SnakeMeteorPotato.DisplayName: Snake Meteor Potato
 	SnakeMine.DisplayName: Snake Mine
 	SnakePotato.DisplayName: Snake Potato
@@ -44,9 +44,9 @@ Projectiles: {
 	BurningPotatoProjectile.DisplayName: Burning Potato
 	SnakeHammerSwung.DisplayName: Snake Hammer
 	SnakeHammerThrown.DisplayName: Snake Hammer
-	SnakeSummon.DisplayName: Snake Summon
-	SnakeSummonFireball.DisplayName: Snake Summon Fireball
-	FireAntPotato.DisplayName: Fire Ant Potato
+	SnakeSummon.DisplayName: Devilish Snakeling
+	SnakeSummonFireball.DisplayName: Fireball
+	FireAntPotato.DisplayName: Potato
 }
 
 DevilishSnakeSpawnInfo: Enter the Snake Arena and beat the enemies.
