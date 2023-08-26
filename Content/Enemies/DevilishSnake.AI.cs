@@ -7,6 +7,7 @@ using Terraria.ModLoader;
 using Snaker.Content.World;
 using Terraria.Audio;
 using Terraria.ID;
+using System.IO;
 
 namespace Snaker.Content.Enemies;
 
@@ -70,6 +71,9 @@ public partial class DevilishSnake : ModNPC
         }
     }
 
+    public override void SendExtraAI(BinaryWriter writer) => writer.Write(_survivalDone);
+    public override void ReceiveExtraAI(BinaryReader reader) => _survivalDone = reader.ReadBoolean();
+
     private void SurvivalStage()
     {
         NPC.hide = true;
@@ -79,7 +83,7 @@ public partial class DevilishSnake : ModNPC
 
         Timer++;
 
-        if (Timer % 5 == 0)
+        if (Timer % 5 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
         {
             float x = Main.rand.NextFloat(Subworld.OpenLeft + 4, Subworld.OpenRight - 4) * 16;
             float y = Subworld.OpenTop - 4 * 16;
@@ -95,8 +99,9 @@ public partial class DevilishSnake : ModNPC
             State = SnakeState.MoveUpDown;
             AttackState = SnakeAttackState.Fireball;
             Timer = 0;
-            NPC.hide = false;
+
             NPC.dontTakeDamage = false;
+            NPC.netUpdate = true;
 
             _survivalDone = true;
         }
@@ -118,8 +123,12 @@ public partial class DevilishSnake : ModNPC
         //Positional stuff
         int x = SubworldSystem.Current.Width * 11;
         int y = (int)(SubworldSystem.Current.Height * 9.5f);
+        float speed = 0.0075f;
 
-        _targetPosition = new Vector2(x + (MathF.Sin(Timer * 0.01f) * (15 * 16)), y + (MathF.Sin(Timer * 0.0075f) * (78 * 16)));
+        if (Main.expertMode && NPC.life < NPC.lifeMax / 2)
+            speed += 0.0025f * (1 - (NPC.life / (NPC.lifeMax / 2f)));
+
+        _targetPosition = new Vector2(x + (MathF.Sin(Timer * 0.01f) * (15 * 16)), y + (MathF.Sin(Timer * speed) * (78 * 16)) - 80);
         NPC.Center = Vector2.Lerp(NPC.Center, _targetPosition, 0.04f);
 
         float finalRotation = NPC.Center.Y > Target.Center.Y ? NPC.AngleTo(Target.Center) + MathHelper.Pi : NPC.AngleTo(Target.Center) - MathHelper.Pi;
@@ -141,18 +150,20 @@ public partial class DevilishSnake : ModNPC
             cutoff = (int)(cutoff * 1.25f);
         else
         {
-            float mod = 0.25f;
+            float mod = 0.5f;
 
-            if (Main.masterMode)
-                mod = 0.5f;
+            if (Main.getGoodWorld)
+                mod = 0.9f;
+            else if (Main.masterMode)
+                mod = 0.72f;
 
-            float factor = NPC.life / (float)NPC.lifeMax * mod;
+            float factor = Math.Max(1 - mod, NPC.life / (float)NPC.lifeMax * mod);
             cutoff = (int)(cutoff * factor);
         }
 
         SubAttack(cutoff);
 
-        if (AttackTimer == cutoff)
+        if (AttackTimer >= cutoff + 1)
         {
             AttackTimer = 0;
             AttackState++;
@@ -174,7 +185,8 @@ public partial class DevilishSnake : ModNPC
             case SnakeAttackState.Fireball:
                 NPC.TargetClosest();
 
-                if (AttackTimer > cutoff - 60 && AttackTimer % 20 == 0)
+                int cut = cutoff / 2 / 3;
+                if (Main.netMode != NetmodeID.MultiplayerClient && AttackTimer > cutoff - (cut * 3) && AttackTimer % cut == 0)
                 {
                     var vel = NPC.DirectionTo(Target.Center).RotatedByRandom(0.5f) * 7;
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<SnakeFireball>(), 60, 3f, Main.myPlayer);
@@ -184,7 +196,7 @@ public partial class DevilishSnake : ModNPC
             case SnakeAttackState.Mines:
                 SlowDown(cutoff);
 
-                if (AttackTimer % 12 == 0)
+                if (Main.netMode != NetmodeID.MultiplayerClient && AttackTimer % 12 == 0)
                 {
                     float x = Main.rand.NextFloat(Subworld.OpenLeft + 16, Subworld.OpenRight - 16) * 16;
                     float y = Main.rand.NextFloat(Subworld.OpenTop + 4, Subworld.OpenBottom - 4) * 16;
@@ -197,10 +209,10 @@ public partial class DevilishSnake : ModNPC
                 }
                 break;
             case SnakeAttackState.Potato:
-                if (AttackTimer == cutoff / 2)
-                {
-                    NPC.TargetClosest();
+                NPC.TargetClosest();
 
+                if (Main.netMode != NetmodeID.MultiplayerClient && AttackTimer == cutoff / 2)
+                {
                     float x = Main.rand.NextFloat(Subworld.OpenLeft + 4, Subworld.OpenLeft + 8) * 16;
                     float y = Main.rand.NextFloat(Subworld.OpenTop + 10, Subworld.OpenCenter) * 16;
                     var vel = GetArcVel(NPC.Center, new Vector2(x, y), SnakePotato.Gravity, maxXvel: 8f);
@@ -213,10 +225,10 @@ public partial class DevilishSnake : ModNPC
                 }
                 break;
             case SnakeAttackState.Tongue:
-                if (AttackTimer == cutoff / 4)
-                {
-                    NPC.TargetClosest();
+                NPC.TargetClosest();
 
+                if (Main.netMode != NetmodeID.MultiplayerClient && AttackTimer == cutoff / 4)
+                {
                     Vector2 vel = NPC.DirectionTo(Target.Center) * 14 + (Target.velocity.SafeNormalize(Vector2.Zero) * 3.5f);
                     Vector2 pos = SnakeTongue.GetOriginLocation(NPC);
                     Projectile.NewProjectile(NPC.GetSource_FromAI(), pos, vel, ModContent.ProjectileType<SnakeTongue>(), 18, 3f, Main.myPlayer);

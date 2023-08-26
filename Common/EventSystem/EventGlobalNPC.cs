@@ -1,5 +1,6 @@
 ﻿using Snaker.Content.Enemies;
 using Snaker.Content.World;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -48,10 +49,19 @@ internal class InstancedEventNPC : GlobalNPC
             if (Main.masterMode) //Master mode sucks and I ain't making it better
                 eventWeight *= 0.8f;
 
-            if (npc.type == ModContent.NPCType<DevilishSnake>())
+            //if (npc.type == ModContent.NPCType<DevilishSnake>())
                 eventWeight = 1.1f;
 
-            ModContent.GetInstance<SnakeArenaSystem>().ProgressEvent(eventWeight);
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+                ModContent.GetInstance<SnakeArenaSystem>().ProgressEvent(eventWeight);
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                var packet = Mod.GetPacket(2);
+                packet.Write("ProgressSnakeEvent");
+                packet.Write((Half)SnakeArenaSystem.WaveProgress);
+                packet.Send();
+            }
         }
         return eventEnemy && npc.type != ModContent.NPCType<DevilishSnake>();
     }

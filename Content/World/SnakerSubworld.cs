@@ -60,6 +60,6 @@ internal class SnakerSubworld : Subworld
         }
     }
 
-    public override void OnEnter() => ModContent.GetInstance<SnakeArenaSystem>().StartEvent();
+    public override void OnLoad() => ModContent.GetInstance<SnakeArenaSystem>().StartEvent();
     public override void OnExit() => ModContent.GetInstance<SnakeArenaSystem>().EndEvent();
 }

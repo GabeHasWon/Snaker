@@ -72,7 +72,7 @@ public class PotatoBeeFireAnt : ModNPC
 			else
 				NPC.velocity *= 0.95f;
 
-			if (Timer % 180 == 0)
+			if (Timer % 180 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				var vel = NPC.DirectionTo(Target.Center) * 12;
                 Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ModContent.ProjectileType<FireAntPotato>(), 24, 3f, Main.myPlayer);

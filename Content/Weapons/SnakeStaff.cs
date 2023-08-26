@@ -71,16 +71,24 @@ internal class SnakeSummon : ModProjectile
 
     private int TargetWhoAmI
     {
-        get => (int)Projectile.localAI[1];
+        get => Projectile.OwnerMinionAttackTargetNPC is not null ? Projectile.OwnerMinionAttackTargetNPC.whoAmI : (int)Projectile.localAI[1];
         set => Projectile.localAI[1] = value;
     }
 
-    private NPC Target => Main.npc[TargetWhoAmI];
+    private NPC Target => Projectile.OwnerMinionAttackTargetNPC ?? Main.npc[TargetWhoAmI];
 
-    private List<SnakeBody> bodies = new();
+    private readonly List<SnakeBody> bodies = new();
     private short _minionNumber = 0;
+    private bool init = false;
 
-    public override void SetStaticDefaults() => _bodyTex = ModContent.Request<Texture2D>(Texture + "Body");
+    public override void SetStaticDefaults()
+    {
+        _bodyTex = ModContent.Request<Texture2D>(Texture + "Body");
+
+        ProjectileID.Sets.MinionSacrificable[Type] = true;
+        ProjectileID.Sets.MinionTargettingFeature[Type] = true;
+    }
+
     public override void Unload() => _bodyTex = null;
 
     public override void SetDefaults()
@@ -104,26 +112,32 @@ internal class SnakeSummon : ModProjectile
     public override void SendExtraAI(BinaryWriter writer) => writer.Write(_minionNumber);
     public override void ReceiveExtraAI(BinaryReader reader) => _minionNumber = reader.ReadInt16();
 
-    public override void OnSpawn(IEntitySource source)
-    {
-        const int BodyCount = 10;
-
-        for (int i = 0; i < BodyCount; ++i)
-            bodies.Add(new SnakeBody(Projectile.Center, i == BodyCount - 1));
-
-        _minionNumber = 0;
-        for (int i = 0; i < Main.maxProjectiles; ++i)
-        {
-            if (Main.projectile[i].type == Type && Main.projectile[i].owner == Projectile.owner)
-                _minionNumber++;
-
-            if (i == Projectile.whoAmI)
-                break;
-        }
-    }
-
     public override void AI()
     {
+        if (!init)
+        {
+            if (Main.netMode != NetmodeID.Server) //Don't bother making these on the server
+            {
+                const int BodyCount = 10;
+
+                for (int i = 0; i < BodyCount; ++i)
+                    bodies.Add(new SnakeBody(Projectile.Center, i == BodyCount - 1));
+            }
+
+            _minionNumber = 0;
+            for (int i = 0; i < Main.maxProjectiles; ++i)
+            {
+                if (Main.projectile[i].type == Type && Main.projectile[i].owner == Projectile.owner)
+                    _minionNumber++;
+
+                if (i == Projectile.whoAmI)
+                    break;
+            }
+
+            init = true;
+            Projectile.netUpdate = true;
+        }
+
         if (!Owner.HasBuff<SnakeSummonBuff>())
             Projectile.Kill();
 

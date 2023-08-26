@@ -46,7 +46,7 @@ internal class SnakeFireball : ModProjectile
 
         Timer++;
 
-        if (Timer % 15 == 0)
+        if (Timer % 15 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
         {
             var pos = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width * 0.5f, Projectile.height * 0.5f);
             var vel = Projectile.velocity.RotatedByRandom(0.5f) * Main.rand.NextFloat(0.2f, 0.5f);

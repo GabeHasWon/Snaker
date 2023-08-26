@@ -44,6 +44,8 @@ internal class InterfaceLayerSystem : ModSystem
 
 	private static void DrawProgressBarProgress(Vector2 pos)
     {
+        SetProgressToBossLife();
+
         float progress = (float)SnakeArenaSystem.Wave / 5f + (SnakeArenaSystem.WaveProgress / 5f);
         float width = 186 * progress;
         Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, pos + new Vector2(10, 50), new Rectangle(0, 0, (int)width, 12), Color.Orange);
@@ -55,6 +57,22 @@ internal class InterfaceLayerSystem : ModSystem
             return;
 
         DrawSurvivalTimer();
+    }
+
+    internal static void SetProgressToBossLife()
+    {
+        if (SnakeArenaSystem.Wave == SnakeArenaSystem.EventStage.Boss) //Set progress to boss's health
+        {
+            int whoAmI = NPC.FindFirstNPC(ModContent.NPCType<DevilishSnake>());
+
+            if (whoAmI != -1)
+            {
+                NPC npc = Main.npc[whoAmI];
+
+                if (npc.active && npc.life > 0)
+                    SnakeArenaSystem.WaveProgress = 1 - (npc.life / (float)npc.lifeMax);
+            }
+        }
     }
 
     private static void DrawSurvivalTimer()

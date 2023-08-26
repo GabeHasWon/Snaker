@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace Snaker.Content.Enemies;
@@ -26,7 +27,12 @@ public partial class DevilishSnake : ModNPC
             var col = GetAlpha(Lighting.GetColor((pos + Main.screenPosition).ToTileCoordinates())).Value * (i > 6 ? 1 - ((i - 6) / 14f) : 1f);
             Main.EntitySpriteDraw(tex, pos, null, col, rotation, Vector2.Zero, scale, SpriteEffects.None, 0);
         }
-        return true;
+
+        var headLightCol = Lighting.GetColor(NPC.Center.ToTileCoordinates());
+        var headCol = GetAlpha(headLightCol).GetValueOrDefault(headLightCol);
+        var npcTex = TextureAssets.Npc[Type].Value;
+        Main.EntitySpriteDraw(npcTex, NPC.Center - Main.screenPosition, null, headCol, NPC.rotation, npcTex.Size() / 2f, scale, SpriteEffects.None, 0);
+        return false;
     }
 
     public override Color? GetAlpha(Color drawColor)
