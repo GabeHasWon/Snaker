@@ -13,7 +13,7 @@ namespace Snaker.Content.Enemies;
 
 public partial class DevilishSnake : ModNPC
 {
-    public const int SurvivalLength = 20 * 60;
+    public const int SurvivalTime = 20 * 60;
 
     private static SnakerSubworld Subworld => SubworldSystem.Current as SnakerSubworld;
 
@@ -94,7 +94,7 @@ public partial class DevilishSnake : ModNPC
             Main.projectile[proj].scale = MathHelper.Lerp(vel.Y / 12f, 1f, 0.5f);
         }
 
-        if (Timer >= SurvivalLength)
+        if (Timer >= SurvivalTime)
         {
             State = SnakeState.MoveUpDown;
             AttackState = SnakeAttackState.Fireball;

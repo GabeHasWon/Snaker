@@ -3,6 +3,7 @@ Tiles: {
 	SnakePaintingTile.MapEntry: Snake Painting
 	SnakePortalTile.MapEntry: Portal
 	SnakeTrophy.MapEntry: Snake Trophy
+	IceBoxTile.MapEntry: Ice Box Tile
 }
 
 Biomes: {
@@ -31,6 +32,11 @@ NPCs: {
 		DisplayName: Potato Bee Fire Ant
 		Bestiary: An unnatural mix of potato and insect. Despite the relatively soft, starchy body - it still hurts!
 	}
+
+	IceMonster: {
+		DisplayName: Ice Monster
+		Bestiary: A devilish, ice-cold yet dapper beast. Controlled by a long-lost being, it attempts to ram unfortunate advenuterers with its many spikes.
+	}
 }
 
 Projectiles: {
@@ -53,6 +59,7 @@ DevilishSnakeSpawnInfo: Enter the Snake Arena and beat the enemies.
 DevilishSnakeEventDefeat: The furious aura mists away...
 DevilishSnakeEventWave: "{0} Wave: {1}"
 SurviveText: SURVIVE!
+SurviveSecondsText: seconds
 
 EventWaves: {
 	First: First
@@ -60,4 +67,10 @@ EventWaves: {
 	Third: Third
 	Fourth: Fourth
 	Boss: Boss
+}
+
+UnfathomableColdDeath: {
+	0: "{0} couldn't handle the cold."
+	1: The cold took over {0}'s body.
+	2: "{0} became trapped in ice."
 }

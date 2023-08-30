@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Snaker.Content.Cangoler;
 using Snaker.Content.Enemies;
 using Snaker.Content.World;
+using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
@@ -21,14 +23,14 @@ internal class InterfaceLayerSystem : ModSystem
 			"Snaker: Snake Event Progress",
 			delegate
 			{
-				if (!SubworldLibrary.SubworldSystem.IsActive<SnakerSubworld>() || !SnakeArenaSystem.Active)
+				if (!SubworldSystem.IsActive<SnakerSubworld>() || !SnakeArenaSystem.Active)
 					return true;
 
 				Texture2D tex = ModContent.Request<Texture2D>("Snaker/Assets/Images/UI/EventBar").Value;
 				var pos = new Vector2(Main.screenWidth / 2 - (tex.Width / 2f), 12);
                 DrawProgressBarProgress(pos);
 
-				Main.spriteBatch.Draw(tex, pos, Color.White); //Bar
+                Main.spriteBatch.Draw(tex, pos, Color.White); //Bar
 
                 var font = FontAssets.DeathText.Value; //Wave number
                 string progress = (SnakeArenaSystem.WaveProgress * 100).ToString("#0.#") + "%";
@@ -40,6 +42,16 @@ internal class InterfaceLayerSystem : ModSystem
 			},
 			InterfaceScaleType.UI)
 		);
+
+        layers.Insert(index - 1, new LegacyGameInterfaceLayer(
+            "Snaker: Survival Timer",
+            delegate
+            {
+                if (SurvivalTimerCheck(out float time, out float maxTime))
+                    DrawSurvivalTimer(time, maxTime);
+                return true;
+            }
+            ));
 	}
 
 	private static void DrawProgressBarProgress(Vector2 pos)
@@ -55,8 +67,6 @@ internal class InterfaceLayerSystem : ModSystem
 
         if (SnakeArenaSystem.Wave != SnakeArenaSystem.EventStage.Boss)
             return;
-
-        DrawSurvivalTimer();
     }
 
     internal static void SetProgressToBossLife()
@@ -75,19 +85,43 @@ internal class InterfaceLayerSystem : ModSystem
         }
     }
 
-    private static void DrawSurvivalTimer()
+    private static bool SurvivalTimerCheck(out float time, out float maxTime)
     {
-        int npc = NPC.FindFirstNPC(ModContent.NPCType<DevilishSnake>());
+        time = 0;
+        maxTime = 0;
 
-        if (npc == -1)
-            return;
+        if (SubworldSystem.Current is SnakerSubworld) //Uh oh if hardcoding
+        {
+            int npc = NPC.FindFirstNPC(ModContent.NPCType<DevilishSnake>());
 
-        DevilishSnake boss = Main.npc[npc].ModNPC as DevilishSnake;
+            if (npc == -1)
+                return false;
 
-        if (boss.State != DevilishSnake.SnakeState.Survival)
-            return;
+            DevilishSnake boss = Main.npc[npc].ModNPC as DevilishSnake;
 
-        string text = (boss.Timer / 60f).ToString("0.00");
+            if (boss.State != DevilishSnake.SnakeState.Survival)
+                return false;
+
+            time = boss.Timer / 60f;
+            maxTime = DevilishSnake.SurvivalTime;
+            return true;
+        }
+        else if (NPC.AnyNPCs(ModContent.NPCType<IceMonster>()))
+        {
+            int npc = NPC.FindFirstNPC(ModContent.NPCType<IceMonster>());
+            IceMonster iceMonster = Main.npc[npc].ModNPC as IceMonster;
+
+            time = iceMonster.DespawnTimer / 60f;
+            maxTime = IceMonster.SurvivalTime;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    private static void DrawSurvivalTimer(float time, float maxTime)
+    {
+        string text = time.ToString("0.00") + "/" + (maxTime / 60f).ToString("00");
         var font = FontAssets.DeathText.Value;
         Vector2 origin = font.MeasureString(text) / 2f;
         Vector2 textPos = new(Main.screenWidth / 2f, Main.screenHeight - 120);
@@ -97,5 +131,10 @@ internal class InterfaceLayerSystem : ModSystem
         origin = font.MeasureString(text) / 2f;
         textPos = new(Main.screenWidth / 2f, Main.screenHeight - 160);
         ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, text, textPos, Color.LightGray, 0f, origin, Vector2.One * 0.75f);
+
+        text = Language.GetTextValue("Mods.Snaker.SurviveSecondsText");
+        origin = font.MeasureString(text) / 2f;
+        textPos = new(Main.screenWidth / 2f, Main.screenHeight - 80);
+        ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, font, text, textPos, Color.LightGray, 0f, origin, Vector2.One * 0.55f);
     }
 }
