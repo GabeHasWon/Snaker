@@ -70,3 +70,12 @@ CangolerItem: {
 	DisplayName: Cangoler
 	Tooltip: Contained inside is a mysterious, ancient, and furious creature.
 }
+
+DevilishRiftmirror: {
+	DisplayName: Devilish Riftmirror
+	Tooltip:
+		'''
+		Teleports you to the Devilish Arena
+		'An ice-hot aura emenates from the portal'
+		'''
+}

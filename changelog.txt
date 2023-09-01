@@ -4,3 +4,4 @@
 	- Defeating the Ice Monster drops the Cangoler, a powerful summon item
 - Made Snake Staff use mana for vanilla parity
 - Made Snake Staff use vanilla minion order
+- Added the Devilish Riftmirror, a craftable way to easily access the Devilish Arena
