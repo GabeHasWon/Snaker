@@ -65,3 +65,8 @@ IceBox: {
 	DisplayName: Ice Box
 	Tooltip: ""
 }
+
+CangolerItem: {
+	DisplayName: Cangoler
+	Tooltip: Contained inside is a mysterious, ancient, and furious creature.
+}

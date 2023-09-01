@@ -18,6 +18,11 @@ Buffs: {
 		DisplayName: Devilish Snakeling
 		Description: "'Surprisingly powerful!'"
 	}
+
+	CangolerBuff: {
+		DisplayName: Cangoler
+		Description: "'A mix of demon and frost, with free horns!'"
+	}
 }
 
 NPCs: {
@@ -53,6 +58,7 @@ Projectiles: {
 	SnakeSummon.DisplayName: Devilish Snakeling
 	SnakeSummonFireball.DisplayName: Fireball
 	FireAntPotato.DisplayName: Potato
+	CangolerMinion.DisplayName: Cangoler
 }
 
 DevilishSnakeSpawnInfo: Enter the Snake Arena and beat the enemies.

@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.GameContent;
 using Terraria.Audio;
-using System;
 using Terraria.DataStructures;
 using Terraria.Localization;
 
@@ -16,7 +15,7 @@ namespace Snaker.Content.Cangoler;
 
 public class IceMonster : ModNPC
 {
-	public const int SurvivalTime = 2 * 60 * 60;
+	public const int SurvivalTime = 1 * 60 * 60;
 	public const int MaxSpawnTime = 100;
 
 	private static Asset<Texture2D> _hats;
@@ -31,6 +30,8 @@ public class IceMonster : ModNPC
 		get => NPC.ai[3] != 0;
 		set => NPC.ai[3] = value.ToInt();
 	}
+
+	private bool IsFading => DespawnTimer > SurvivalTime - (2 * 60);
 
 	private Player Target => Main.player[NPC.target];
 
@@ -92,6 +93,8 @@ public class IceMonster : ModNPC
 		NPC.direction = NPC.spriteDirection = Target.Center.X > NPC.Center.X ? 1 : -1;
 		NPC.rotation = NPC.velocity.X * 0.02f;
 
+        PlayerTrapCollision();
+
         SpawnTimer++;
 
         if (SpawnTimer < MaxSpawnTime)
@@ -116,17 +119,24 @@ public class IceMonster : ModNPC
 			const float MoveSpeed = 0.1f;
 			const float MaxSpeed = 3f;
 
-			NPC.velocity += NPC.DirectionTo(Target.Center) * MoveSpeed;
+			if (!IsFading)
+			{
+				NPC.velocity += NPC.DirectionTo(Target.Center) * MoveSpeed;
 
-			if (NPC.velocity.LengthSquared() > MaxSpeed * MaxSpeed)
-				NPC.velocity = Vector2.Normalize(NPC.velocity) * MaxSpeed;
+				if (NPC.velocity.LengthSquared() > MaxSpeed * MaxSpeed)
+					NPC.velocity = Vector2.Normalize(NPC.velocity) * MaxSpeed;
+			}
+			else
+				NPC.velocity *= 0.99f;
 
-			if (IsSecondStage && Timer % 58 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
+			if (IsSecondStage && !IsFading && Timer % 58 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				var vel = NPC.DirectionTo(Target.Center + Target.velocity) * 8;
                 var proj = Main.projectile[Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, vel, ProjectileID.IceBolt, 30, 1f, Main.myPlayer)];
 				proj.timeLeft = 90;
 				proj.tileCollide = false;
+				proj.friendly = false;
+				proj.hostile = true;
 			}
 		}
 		else
@@ -151,8 +161,13 @@ public class IceMonster : ModNPC
 		if (!IsSecondStage && DespawnTimer >= SurvivalTime / 2)
 			IsSecondStage = true;
 
-		if (IsSecondStage)
+		if (IsSecondStage && !IsFading)
 			NPC.scale = MathHelper.Lerp(NPC.scale, 1.5f, 0.02f);
+		else if (IsFading)
+		{
+			NPC.scale = MathHelper.Lerp(NPC.scale, 0f, 0.03f);
+			NPC.Opacity = MathHelper.Lerp(NPC.Opacity, 0f, 0.02f);
+		}
 
         NPC.position = NPC.Center;
         NPC.width = (int)(ContentSamples.NpcsByNetId[Type].width * NPC.scale);
@@ -164,35 +179,41 @@ public class IceMonster : ModNPC
 			NPC.active = false;
 
 			if (Main.netMode != NetmodeID.MultiplayerClient)
-				Item.NewItem(NPC.GetSource_Death(), NPC.Hitbox, ItemID.IceBlock);
+				Item.NewItem(NPC.GetSource_Death(), NPC.Hitbox, ModContent.ItemType<CangolerItem>());
 
 			SoundEngine.PlaySound(SoundID.Shatter, NPC.Center);
 		}
-
-		PlayerTrapCollision();
-    }
+	}
 
     private void PlayerTrapCollision()
     {
+		bool kill = true;
+
         for (int i = 0; i < Main.maxPlayers; ++i)
 		{
 			Player plr = Main.player[i];
 
-			if (plr.active && !plr.dead)
-			{
+			if (plr.active && !plr.dead) 
+			{ 
 				float dist = plr.Distance(_spawnPosition);
 
 				if (dist > 17 * 16 && dist < 18 * 16)
 					plr.velocity = plr.DirectionTo(_spawnPosition) * 8;
+
+				if (dist < 18 * 16)
+					kill = false;
 			}
 		}
+
+		if (kill)
+			NPC.active = false;
 
 		if (DespawnTimer % 14 != 0)
 			return;
 
 		const int Intervals = 40;
 
-		Vector2 offset = new Vector2(18.5f * 16, 0);
+		Vector2 offset = new(18.5f * 16, 0);
 
 		for (int i = 0; i < Intervals; ++i)
 		{

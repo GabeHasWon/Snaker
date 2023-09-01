@@ -46,5 +46,12 @@ public class IceBoxTile : ModTile
         return false;
     }
 
+    public override void MouseOver(int i, int j)
+    {
+        Main.LocalPlayer.cursorItemIconText = "Challenge";
+        Main.LocalPlayer.cursorItemIconEnabled = false;
+        Main.LocalPlayer.cursorItemIconID = -1;
+    }
+
     public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 2 : 6;
 }

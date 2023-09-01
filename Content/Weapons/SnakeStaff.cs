@@ -32,6 +32,7 @@ internal class SnakeStaff : ModItem
         Item.shoot = ModContent.ProjectileType<SnakeSummon>();
         Item.channel = false;
         Item.noMelee = true;
+        Item.mana = 24;
         Item.buffTime = 4;
         Item.buffType = ModContent.BuffType<SnakeSummonBuff>();
     }
@@ -78,7 +79,6 @@ internal class SnakeSummon : ModProjectile
     private NPC Target => Projectile.OwnerMinionAttackTargetNPC ?? Main.npc[TargetWhoAmI];
 
     private readonly List<SnakeBody> bodies = new();
-    private short _minionNumber = 0;
     private bool init = false;
 
     public override void SetStaticDefaults()
@@ -109,9 +109,6 @@ internal class SnakeSummon : ModProjectile
         Projectile.usesLocalNPCImmunity = true;
     }
 
-    public override void SendExtraAI(BinaryWriter writer) => writer.Write(_minionNumber);
-    public override void ReceiveExtraAI(BinaryReader reader) => _minionNumber = reader.ReadInt16();
-
     public override void AI()
     {
         if (!init)
@@ -122,16 +119,6 @@ internal class SnakeSummon : ModProjectile
 
                 for (int i = 0; i < BodyCount; ++i)
                     bodies.Add(new SnakeBody(Projectile.Center, i == BodyCount - 1));
-            }
-
-            _minionNumber = 0;
-            for (int i = 0; i < Main.maxProjectiles; ++i)
-            {
-                if (Main.projectile[i].type == Type && Main.projectile[i].owner == Projectile.owner)
-                    _minionNumber++;
-
-                if (i == Projectile.whoAmI)
-                    break;
             }
 
             init = true;
@@ -153,7 +140,7 @@ internal class SnakeSummon : ModProjectile
 
         if (State == SnakeState.Idle)
         {
-            SnakeyMovement(Owner.Center - new Vector2(0, 60 + (_minionNumber * 50)).RotatedBy(Timer * 0.05f));
+            SnakeyMovement(Owner.Center - new Vector2(0, 60 + (Projectile.minionPos * 50)).RotatedBy(Timer * 0.05f));
             ScanNearbyEnemies();
 
             if (Projectile.DistanceSQ(Owner.Center) > 1600 * 1600)
@@ -164,7 +151,7 @@ internal class SnakeSummon : ModProjectile
         }
         else if (State == SnakeState.AttackingRange)
         {
-            SnakeyMovement(Owner.Center - new Vector2(0, 100 + (_minionNumber * 50)).RotatedBy(Timer * 0.05f), 1.2f);
+            SnakeyMovement(Owner.Center - new Vector2(0, 100 + (Projectile.minionPos * 50)).RotatedBy(Timer * 0.05f), 1.2f);
 
             if (!Target.CanBeChasedBy() || Target.DistanceSQ(Projectile.Center) > MaxRangedRange * MaxRangedRange)
             {
