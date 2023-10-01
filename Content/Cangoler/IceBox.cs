@@ -22,6 +22,8 @@ public class IceBoxTile : ModTile
         Main.tileLavaDeath[Type] = true;
 
         TileID.Sets.DisableSmartCursor[Type] = true;
+        TileID.Sets.PreventsTileRemovalIfOnTopOfIt[Type] = true;
+        TileID.Sets.PreventsTileReplaceIfOnTopOfIt[Type] = true;
 
         TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
         TileObjectData.newTile.StyleHorizontal = true;
@@ -35,6 +37,9 @@ public class IceBoxTile : ModTile
 
         AddMapEntry(new Color(43, 105, 155), CreateMapEntryName());
     }
+
+    public override bool CanKillTile(int i, int j, ref bool blockDamaged) => false;
+    public override bool CanExplode(int i, int j) => false;
 
     public override bool RightClick(int i, int j)
     {

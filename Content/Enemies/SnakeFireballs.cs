@@ -59,7 +59,7 @@ internal class SnakeFireball : ModProjectile
         Lighting.AddLight(Projectile.Center, TorchID.Torch);
     }
 
-    public override void Kill(int timeLeft)
+    public override void OnKill(int timeLeft)
     {
         ExplosionHelper.Fire(Projectile.Center, 60, Main.rand.NextFloat(2, 4f), (3, 7));
         ExplosionHelper.Smoke(Projectile.GetSource_Death(), Projectile.Center, 10, (3, 7));
@@ -125,7 +125,7 @@ internal class SnakeFireballTrail : ModProjectile
             Dust.NewDust(Projectile.position + new Vector2(4), Projectile.width - 8, Projectile.height - 8, DustID.Torch);
     }
 
-    public override void Kill(int timeLeft)
+    public override void OnKill(int timeLeft)
     {
         ExplosionHelper.Fire(Projectile.Center, 8, Main.rand.NextFloat(1, 2), (2, 4));
     }

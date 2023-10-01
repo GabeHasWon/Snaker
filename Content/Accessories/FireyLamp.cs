@@ -133,5 +133,5 @@ internal class LampSnake : ModProjectile
 			modifiers.FinalDamage.Base = Projectile.damage + (target.defense / 2);
     }
 
-    public override void Kill(int timeLeft) => ExplosionHelper.Fire(Projectile.Center, 15, Main.rand.NextFloat(0.8f, 1.5f), (2, 4));
+    public override void OnKill(int timeLeft) => ExplosionHelper.Fire(Projectile.Center, 15, Main.rand.NextFloat(0.8f, 1.5f), (2, 4));
 }

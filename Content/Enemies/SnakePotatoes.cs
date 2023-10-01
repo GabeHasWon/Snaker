@@ -48,7 +48,7 @@ internal class SnakePotato : ModProjectile
         return false;
     }
 
-    public override void Kill(int timeLeft)
+    public override void OnKill(int timeLeft)
     {
         if (Main.netMode != NetmodeID.Server)
         {
@@ -82,9 +82,5 @@ internal class SnakeMeteorPotato : ModProjectile
         Projectile.velocity.Y += Gravity;
         Projectile.rotation += Projectile.velocity.X * 0.01f;
         Projectile.tileCollide = ((SubworldLibrary.SubworldSystem.Current as SnakerSubworld).OpenBottom - 6) * 16 <= Projectile.Center.Y;
-    }
-
-    public override void Kill(int timeLeft)
-    {
     }
 }

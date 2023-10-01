@@ -83,7 +83,7 @@ internal class SnakeMine : ModProjectile, IDrawAdditive
         return false;
     }
 
-    public override void Kill(int timeLeft)
+    public override void OnKill(int timeLeft)
     {
         if (timeLeft <= FadeTime)
             return;

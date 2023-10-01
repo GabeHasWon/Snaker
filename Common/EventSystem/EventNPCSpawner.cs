@@ -22,7 +22,7 @@ internal class EventNPCSpawner : ModNPC
 
     public override void SetStaticDefaults()
     {
-        NPCID.Sets.NPCBestiaryDrawModifiers mods = new(0)
+        NPCID.Sets.NPCBestiaryDrawModifiers mods = new()
         {
             Hide = true,
         };

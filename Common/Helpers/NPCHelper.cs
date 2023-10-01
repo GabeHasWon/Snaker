@@ -79,11 +79,9 @@ public static class NPCHelper
 
 	public static void BuffImmune(int type, bool whipsToo = false)
 	{
-		NPCDebuffImmunityData debuffData = new NPCDebuffImmunityData
-		{
-			ImmuneToAllBuffsThatAreNotWhips = true,
-			ImmuneToWhips = whipsToo
-		};
-		NPCID.Sets.DebuffImmunitySets.Add(type, debuffData);
+		NPCID.Sets.ImmuneToRegularBuffs[type] = true;
+
+		if (whipsToo)
+			NPCID.Sets.ImmuneToAllBuffs[type] = true;
 	}
 }
