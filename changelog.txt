@@ -1,7 +1,2 @@
-- Added new music by LetsGo
-- Added Cangoler content
-	- Ice Box in the underground Snow biome, which spawns the Ice Monster and a short survival event
-	- Defeating the Ice Monster drops the Cangoler, a powerful summon item
-- Made Snake Staff use mana for vanilla parity
-- Made Snake Staff use vanilla minion order
-- Added the Devilish Riftmirror, a craftable way to easily access the Devilish Arena
+v1.2.0.5
+- Fixed Devilish Snake bag not dropping expert mode item lol

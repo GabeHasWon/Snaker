@@ -34,8 +34,13 @@ internal class SnakerGenSystem : ModSystem
         int x = (min + max) / 2;
         int y = (int)(Main.worldSurface * 0.4f);
 
-        while (!Main.tile[x, y].HasTile || Main.tile[x, y].TileType != TileID.IceBlock)
+        while (!Main.tile[x, y].HasTile || (Main.tile[x, y].TileType != TileID.IceBlock && Main.tile[x, y].TileType != TileID.SnowBlock))
+        {
+            if (y > Main.maxTilesY - 200)
+                return;
+
             y++;
+        }
 
         y += 200;
 
@@ -55,6 +60,6 @@ internal class SnakerGenSystem : ModSystem
 
         Point16 size = Point16.Zero;
         StructureHelper.Generator.GetDimensions("Content/World/Structures/SnakeTower", ModContent.GetInstance<Snaker>(), ref size);
-        StructureHelper.Generator.GenerateStructure("Content/World/Structures/SnakeTower", new Point16(x, Main.maxTilesY - 20 - size.Y), ModContent.GetInstance<Snaker>());
+        StructureHelper.Generator.GenerateStructure("Content/World/Structures/SnakeTower", new Point16(x, Main.maxTilesY - 40 - size.Y), ModContent.GetInstance<Snaker>());
     }
 }

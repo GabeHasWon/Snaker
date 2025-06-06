@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Snaker.Common.Helpers;
+using Snaker.Content.Accessories;
 using Snaker.Content.Blocks;
 using Snaker.Content.Weapons;
 using System;
@@ -122,7 +123,8 @@ public class SnakeBag : BossBagItem
 	{
 		itemLoot.AddOneFromOptions<SnakeHammer, SnakeStaff>();
 		itemLoot.AddCommon<SnakePainting>(7);
-		itemLoot.AddCommon<BurningPotato>(1, 32, 43);
+		itemLoot.AddCommon<BurningPotato>(1, 32, 43); 
+		itemLoot.AddCommon<FireyLamp>(1, 32, 43); 
 		AddBossItems<SnakeTrophyItem>(itemLoot, 5..9);
 	}
 }
